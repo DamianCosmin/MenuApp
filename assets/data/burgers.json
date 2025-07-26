@@ -1,0 +1,65 @@
+[
+  {
+    "itemID": 0,
+    "itemName": "Classic Burger",
+    "itemPrice": 35.99,
+    "description": "A timeless classic with a juicy beef patty, lettuce, tomato, pickles, and house sauce.",
+    "photoPath": "assets/images/burgers/template.png"
+  },
+
+  {
+    "itemID": 1,
+    "itemName": "Cheeseburger",
+    "itemPrice": 38.49,
+    "description": "Beef patty topped with melted cheddar cheese, lettuce, tomato, and ketchup.",
+    "photoPath": "assets/images/burgers/template.png"
+  },
+
+  {
+    "itemID": 2,
+    "itemName": "Double Cheeseburger",
+    "itemPrice": 42.75,
+    "description": "Two beef patties stacked with double cheddar, onions, pickles, and mustard.",
+    "photoPath": "assets/images/burgers/template.png"
+  },
+
+  {
+    "itemID": 3,
+    "itemName": "Triple Cheeseburger",
+    "itemPrice": 47.90,
+    "description": "Triple beef, triple cheese, with lettuce, tomato, onions, and our special sauce.",
+    "photoPath": "assets/images/burgers/template.png"
+  },
+
+  {
+    "itemID": 4,
+    "itemName": "Bacon Burger",
+    "itemPrice": 39.99,
+    "description": "Smoky bacon strips over a juicy beef patty with cheddar, lettuce, and BBQ mayo.",
+    "photoPath": "assets/images/burgers/template.png"
+  },
+
+  {
+    "itemID": 5,
+    "itemName": "Spicy Burger",
+    "itemPrice": 41.50,
+    "description": "Spicy beef patty with jalapeños, pepper jack cheese, lettuce, and chipotle sauce.",
+    "photoPath": "assets/images/burgers/template.png"
+  },
+
+  {
+    "itemID": 6,
+    "itemName": "Chicken Burger",
+    "itemPrice": 36.25,
+    "description": "Grilled chicken breast with lettuce, tomato, mayo, and melted Swiss cheese.",
+    "photoPath": "assets/images/burgers/template.png"
+  },
+  
+  {
+    "itemID": 7,
+    "itemName": "Vegan Burger",
+    "itemPrice": 33.80,
+    "description": "Plant-based patty with vegan cheese, lettuce, tomato, and avocado spread.",
+    "photoPath": "assets/images/burgers/template.png"
+  }
+]
