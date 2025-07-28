@@ -1,5 +1,5 @@
 class ItemModel {
-  // should add categoryID as well
+  final int categoryID;
   final int itemID;
   final String itemName;
   final double itemPrice;
@@ -7,6 +7,7 @@ class ItemModel {
   final String photoPath;
 
   ItemModel({
+    required this.categoryID,
     required this.itemID,
     required this.itemName,
     required this.itemPrice,
@@ -16,6 +17,7 @@ class ItemModel {
 
   factory ItemModel.fromJson(Map<String, dynamic> json) {
     return ItemModel(
+      categoryID: json['categoryID'],
       itemID: json['itemID'],
       itemName: json['itemName'],
       itemPrice: (json['itemPrice'] as num).toDouble(),
@@ -23,4 +25,13 @@ class ItemModel {
       photoPath: json['photoPath'],
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is ItemModel &&
+      other.categoryID == categoryID &&
+      other.itemID == itemID;
+
+  @override
+  int get hashCode => categoryID.hashCode ^ itemID.hashCode;
 }

@@ -1,5 +1,6 @@
 [
   {
+    "categoryID": 0,
     "itemID": 0,
     "itemName": "Classic Burger",
     "itemPrice": 35.99,
@@ -8,6 +9,7 @@
   },
 
   {
+    "categoryID": 0,
     "itemID": 1,
     "itemName": "Cheeseburger",
     "itemPrice": 38.49,
@@ -16,6 +18,7 @@
   },
 
   {
+    "categoryID": 0,
     "itemID": 2,
     "itemName": "Double Cheeseburger",
     "itemPrice": 42.75,
@@ -24,6 +27,7 @@
   },
 
   {
+    "categoryID": 0,
     "itemID": 3,
     "itemName": "Triple Cheeseburger",
     "itemPrice": 47.90,
@@ -32,6 +36,7 @@
   },
 
   {
+    "categoryID": 0,
     "itemID": 4,
     "itemName": "Bacon Burger",
     "itemPrice": 39.99,
@@ -40,6 +45,7 @@
   },
 
   {
+    "categoryID": 0,
     "itemID": 5,
     "itemName": "Spicy Burger",
     "itemPrice": 41.50,
@@ -48,6 +54,7 @@
   },
 
   {
+    "categoryID": 0,
     "itemID": 6,
     "itemName": "Chicken Burger",
     "itemPrice": 36.25,
@@ -56,6 +63,7 @@
   },
   
   {
+    "categoryID": 0,
     "itemID": 7,
     "itemName": "Vegan Burger",
     "itemPrice": 33.80,

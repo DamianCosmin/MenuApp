@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:food_app/utils/order_provider.dart';
 import 'package:food_app/utils/style.dart';
-import 'package:provider/provider.dart';
+import 'package:food_app/widgets/order_item.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -25,14 +26,16 @@ class OrderPageState extends State<OrderPage> {
         centerTitle: true,
       ),
 
-      body: Center(
-        child: Column(
-          children: currentOrder.entries.map((entry) {
-            return Text(
-              'Item with ID ${entry.key}: ${entry.value} pcs',
-              style: const TextStyle(color: Colors.white),
-            );
-          }).toList(),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+        physics: BouncingScrollPhysics(),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: currentOrder.entries.map((entry) {
+              return OrderItem(item: entry.key, qty: entry.value);
+            }).toList(),
+          ),
         ),
       ),
     );

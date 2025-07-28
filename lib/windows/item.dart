@@ -1,28 +1,20 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:food_app/utils/counter_provider.dart';
 import 'package:food_app/utils/order_provider.dart';
+import 'package:food_app/utils/item_model.dart';
 import 'package:food_app/utils/style.dart';
+
 import 'package:food_app/widgets/counter_button.dart';
 
 class ItemPage extends StatelessWidget {
-  final int id;
-  final String name;
-  final String description;
-  final double price;
-  final String photoPath;
-  final String heroTag;
+  final ItemModel currentItem;
+  final String dummyText =
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat';
 
-  const ItemPage({
-    super.key,
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.photoPath,
-    required this.heroTag,
-  });
+  const ItemPage({super.key, required this.currentItem});
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +32,12 @@ class ItemPage extends StatelessWidget {
         child: Column(
           children: [
             Hero(
-              tag: heroTag,
+              tag: currentItem.itemName,
               transitionOnUserGestures: true,
               child: Image(
                 width: double.infinity,
                 height: 300,
-                image: AssetImage(photoPath),
+                image: AssetImage(currentItem.photoPath),
                 fit: BoxFit.cover,
               ),
             ),
@@ -57,7 +49,7 @@ class ItemPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  name,
+                  currentItem.itemName,
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontSize: 34,
@@ -75,7 +67,7 @@ class ItemPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  '$price RON',
+                  '${currentItem.itemPrice} RON',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w500,
@@ -92,7 +84,7 @@ class ItemPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  description,
+                  '${currentItem.description}\n\n${dummyText * 5}',
                   textAlign: TextAlign.justify,
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
@@ -125,7 +117,7 @@ class ItemPage extends StatelessWidget {
                       Provider.of<OrderProvider>(
                         context,
                         listen: false,
-                      ).addToOrder(id, qty);
+                      ).addToOrder(currentItem, qty);
                     },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(

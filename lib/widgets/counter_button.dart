@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:food_app/utils/counter_provider.dart';
 import 'package:food_app/utils/style.dart';
-import 'package:provider/provider.dart';
 
 class CounterButton extends StatefulWidget {
   final int initialValue;
@@ -21,30 +21,6 @@ class CounterButton extends StatefulWidget {
 }
 
 class CounterButtonState extends State<CounterButton> {
-  // late int count;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   count = widget.initialValue;
-  // }
-
-  // void _increment() {
-  //   if (count < widget.max) {
-  //     setState(() {
-  //       count++;
-  //     });
-  //   }
-  // }
-
-  // void _decrement() {
-  //   if (count > widget.min) {
-  //     setState(() {
-  //       count--;
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     final count = context.watch<CounterProvider>().count;

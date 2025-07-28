@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:food_app/utils/counter_provider.dart';
 import 'package:food_app/utils/load_burgers.dart';
-import 'package:food_app/utils/style.dart';
-import 'package:food_app/windows/item.dart';
 import 'package:food_app/utils/item_model.dart';
+import 'package:food_app/utils/style.dart';
+
+import 'package:food_app/windows/item.dart';
 import 'package:food_app/windows/order.dart';
 
 class BurgersPage extends StatefulWidget {
@@ -23,9 +25,6 @@ class BurgersPageState extends State<BurgersPage> {
     burgers = loadBurgers();
   }
 
-  final String dummyText =
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat';
-
   @override
   Widget build(BuildContext context) {
     final List<String> burgersNames = [
@@ -40,14 +39,7 @@ class BurgersPageState extends State<BurgersPage> {
     ];
 
     void viewItem(ItemModel burger) {
-      final page = ItemPage(
-        id: burger.itemID,
-        name: burger.itemName,
-        description: '${burger.description}\n\n${dummyText * 5}',
-        price: burger.itemPrice,
-        photoPath: burger.photoPath,
-        heroTag: burger.itemName,
-      );
+      final page = ItemPage(currentItem: burger);
 
       context.read<CounterProvider>().resetCounter();
       Navigator.push(context, MaterialPageRoute(builder: (context) => page));
