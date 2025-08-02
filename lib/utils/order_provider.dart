@@ -33,4 +33,12 @@ class OrderProvider extends ChangeNotifier {
     _currentOrder.clear();
     notifyListeners();
   }
+
+  double getOrderTotal() {
+    double sum = 0;
+    _currentOrder.forEach((item, qty) {
+      sum += item.itemPrice * qty;
+    });
+    return sum;
+  }
 }

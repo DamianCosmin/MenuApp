@@ -1,66 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:food_app/utils/counter_provider.dart';
+import 'package:food_app/utils/loaders.dart';
+import 'package:food_app/utils/item_model.dart';
 import 'package:food_app/utils/style.dart';
 
-class CoffeePage extends StatelessWidget {
+import 'package:food_app/windows/item.dart';
+import 'package:food_app/windows/order.dart';
+
+class CoffeePage extends StatefulWidget {
   const CoffeePage({super.key});
 
   @override
+  CoffeePageState createState() => CoffeePageState();
+}
+
+class CoffeePageState extends State<CoffeePage> {
+  late Future<List<ItemModel>> coffees;
+
+  @override
+  void initState() {
+    super.initState();
+    coffees = loadCoffee();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final List<String> burgersNames = [
-      'Espresso',
-      'Americano',
-      'Latte',
-      'Cappuccino',
-      'Macchiato',
-      'Mocha',
-      'Flat White',
-      'Cold Brew',
-      'Iced Coffee',
-      'Affogato',
-    ];
+    void viewItem(ItemModel coffee) {
+      final page = ItemPage(currentItem: coffee);
 
-    final List<Widget> burgersList = List.generate(
-      10,
-      (burgerIndex) => Container(
-        margin: EdgeInsets.only(bottom: 24),
-        padding: EdgeInsets.all(15),
-        width: double.infinity,
-        height: 150,
-        decoration: BoxDecoration(
-          color: appSecondaryColor,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(7.5),
-              child: Image(
-                width: 120,
-                height: 120,
-                image: AssetImage('assets/images/coffee/template.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
+      context.read<CounterProvider>().resetCounter();
+      Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+    }
 
-            SizedBox(width: 16),
+    void viewCart() {
+      final page = OrderPage();
 
-            Flexible(
-              child: Text(
-                burgersNames[burgerIndex],
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-                softWrap: true,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+      Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -70,16 +48,95 @@ class CoffeePage extends StatelessWidget {
         ),
         backgroundColor: appNavbarColor,
         centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(32),
-        physics: BouncingScrollPhysics(),
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: burgersList,
+        actions: [
+          IconButton(
+            padding: EdgeInsets.only(right: 8),
+            onPressed: viewCart,
+            icon: Icon(Icons.shopping_cart_outlined),
+            iconSize: 32,
+            color: Colors.white,
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
           ),
-        ),
+        ],
+      ),
+
+      body: FutureBuilder<List<ItemModel>>(
+        future: loadCoffee(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No coffees found'));
+          }
+
+          final coffeeList = snapshot.data!;
+
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(32),
+            physics: BouncingScrollPhysics(),
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: List.generate(coffeeList.length, (coffeeIndex) {
+                  final coffee = coffeeList[coffeeIndex];
+                  return InkWell(
+                    onTap: () => viewItem(coffee),
+                    splashFactory: NoSplash.splashFactory,
+                    highlightColor: Colors.black45,
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 24),
+                      padding: EdgeInsets.all(15),
+                      width: double.infinity,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        color: appSecondaryColor,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(7.5),
+                            child: Hero(
+                              tag: coffee.itemName,
+                              transitionOnUserGestures: true,
+                              child: Image(
+                                width: 120,
+                                height: 120,
+                                image: AssetImage(coffee.photoPath),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(width: 16),
+
+                          Flexible(
+                            child: Text(
+                              coffee.itemName,
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

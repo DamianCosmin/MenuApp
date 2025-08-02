@@ -1,0 +1,28 @@
+[
+  {
+    "categoryID": 5,
+    "itemID": 1,
+    "itemName": "Red Wine",
+    "itemPrice": 45.00,
+    "description": "A bold and rich wine with notes of dark berries and oak.",
+    "photoPath": "assets/images/wines/template.png"
+  },
+
+  {
+    "categoryID": 5,
+    "itemID": 2,
+    "itemName": "Rose Wine",
+    "itemPrice": 38.50,
+    "description": "A crisp and fruity pink wine with floral and berry notes.",
+    "photoPath": "assets/images/wines/template.png"
+  },
+  
+  {
+    "categoryID": 5,
+    "itemID": 3,
+    "itemName": "White Wine",
+    "itemPrice": 42.00,
+    "description": "A light and refreshing wine with hints of citrus and green apple.",
+    "photoPath": "assets/images/wines/template.png"
+  }
+]

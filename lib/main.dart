@@ -139,9 +139,9 @@ class HomePage extends StatelessWidget {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Opacity(
-                opacity: 0.8,
+                opacity: 0.85,
                 child: Image(
-                  image: AssetImage('assets/images/restaurant.png'),
+                  image: AssetImage('assets/images/restaurant2.png'),
                   fit: BoxFit.cover,
                 ),
               ),

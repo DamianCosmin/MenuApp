@@ -1,0 +1,37 @@
+[
+  {
+    "categoryID": 2,
+    "itemID": 1,
+    "itemName": "Spaghetti Carbonara",
+    "itemPrice": 27.50,
+    "description": "Creamy spaghetti with pancetta, eggs, Parmesan, and black pepper.",
+    "photoPath": "assets/images/pasta/template.png"
+  },
+
+  {
+    "categoryID": 2,
+    "itemID": 2,
+    "itemName": "Spaghetti Bolognese",
+    "itemPrice": 25.99,
+    "description": "Traditional meat sauce slow-cooked with tomatoes, herbs, and garlic.",
+    "photoPath": "assets/images/pasta/template.png"
+  },
+  
+  {
+    "categoryID": 2,
+    "itemID": 3,
+    "itemName": "Spaghetti with Shrimps",
+    "itemPrice": 28.75,
+    "description": "Juicy shrimp tossed with garlic, olive oil, and a hint of chili in spaghetti.",
+    "photoPath": "assets/images/pasta/template.png"
+  },
+
+  {
+    "categoryID": 2,
+    "itemID": 4,
+    "itemName": "Lasagna",
+    "itemPrice": 29.50,
+    "description": "Layered pasta with rich meat ragu, creamy béchamel, and melted cheese.",
+    "photoPath": "assets/images/pasta/template.png"
+  }
+]

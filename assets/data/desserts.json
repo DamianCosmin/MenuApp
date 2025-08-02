@@ -1,0 +1,37 @@
+[
+  {
+    "categoryID": 6,
+    "itemID": 1,
+    "itemName": "Lava Cake",
+    "itemPrice": 27.00,
+    "description": "Warm chocolate cake with a gooey molten center, served fresh.",
+    "photoPath": "assets/images/desserts/template.png"
+  },
+
+  {
+    "categoryID": 6,
+    "itemID": 2,
+    "itemName": "Pancakes",
+    "itemPrice": 22.50,
+    "description": "Fluffy stack of pancakes served with maple syrup and fresh fruits.",
+    "photoPath": "assets/images/desserts/template.png"
+  },
+
+  {
+    "categoryID": 6,
+    "itemID": 3,
+    "itemName": "Ice Cream",
+    "itemPrice": 18.00,
+    "description": "Three scoops of creamy ice cream in assorted classic flavors.",
+    "photoPath": "assets/images/desserts/template.png"
+  },
+  
+  {
+    "categoryID": 6,
+    "itemID": 4,
+    "itemName": "Profiterol",
+    "itemPrice": 25.00,
+    "description": "Choux pastry balls filled with cream and topped with rich chocolate sauce.",
+    "photoPath": "assets/images/desserts/template.png"
+  }
+]

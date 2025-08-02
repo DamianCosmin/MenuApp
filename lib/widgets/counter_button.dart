@@ -4,17 +4,7 @@ import 'package:food_app/utils/counter_provider.dart';
 import 'package:food_app/utils/style.dart';
 
 class CounterButton extends StatefulWidget {
-  final int initialValue;
-  final int min;
-  final int max;
-
-  const CounterButton({
-    // default values
-    super.key,
-    this.initialValue = 1,
-    this.min = 1,
-    this.max = 99,
-  });
+  const CounterButton({super.key});
 
   @override
   CounterButtonState createState() => CounterButtonState();

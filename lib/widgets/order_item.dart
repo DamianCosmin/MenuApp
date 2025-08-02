@@ -65,13 +65,14 @@ class OrderItemState extends State<OrderItem> {
 
               SizedBox(width: 16),
 
-              Flexible(
+              Expanded(
+                flex: 2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${widget.qty}x ${widget.item.itemName}',
+                      '${widget.qty > 1 ? '${widget.qty}x ' : ''}${widget.item.itemName}',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
@@ -95,31 +96,29 @@ class OrderItemState extends State<OrderItem> {
                 ),
               ),
 
-              Expanded(
+              Flexible(
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(
-                        onPressed: toggleEditMode,
-                        icon: Icon(Icons.edit, size: 30, color: Colors.white),
-                        padding: EdgeInsets.zero,
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
+                      GestureDetector(
+                        onTap: toggleEditMode,
+                        child: Icon(Icons.edit, size: 28, color: Colors.white),
                       ),
-                      IconButton(
-                        onPressed: () {
+
+                      SizedBox(width: 10),
+
+                      GestureDetector(
+                        onTap: () {
                           context.read<OrderProvider>().removeItem(widget.item);
                         },
-                        icon: Icon(
+                        child: Icon(
                           Icons.delete_outline,
-                          size: 30,
+                          size: 28,
                           color: Colors.red,
                         ),
-                        padding: EdgeInsets.zero,
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
                       ),
                     ],
                   ),

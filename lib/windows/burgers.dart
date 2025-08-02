@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:food_app/utils/counter_provider.dart';
-import 'package:food_app/utils/load_burgers.dart';
+import 'package:food_app/utils/loaders.dart';
 import 'package:food_app/utils/item_model.dart';
 import 'package:food_app/utils/style.dart';
 
@@ -27,17 +27,6 @@ class BurgersPageState extends State<BurgersPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> burgersNames = [
-      'Classic Burger',
-      'Cheeseburger',
-      'Double Cheeseburger',
-      'Triple Cheeseburger',
-      'Bacon Burger',
-      'Spicy Burger',
-      'Chicken Burger',
-      'Vegan Burger',
-    ];
-
     void viewItem(ItemModel burger) {
       final page = ItemPage(currentItem: burger);
 
@@ -71,6 +60,7 @@ class BurgersPageState extends State<BurgersPage> {
           ),
         ],
       ),
+
       body: FutureBuilder<List<ItemModel>>(
         future: loadBurgers(),
         builder: (context, snapshot) {
@@ -82,7 +72,7 @@ class BurgersPageState extends State<BurgersPage> {
             return Center(child: Text('No burgers found'));
           }
 
-          final burgers = snapshot.data!;
+          final burgerList = snapshot.data!;
 
           return SingleChildScrollView(
             padding: EdgeInsets.all(32),
@@ -90,8 +80,8 @@ class BurgersPageState extends State<BurgersPage> {
             child: Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: List.generate(burgers.length, (burgerIndex) {
-                  final burger = burgers[burgerIndex];
+                children: List.generate(burgerList.length, (burgerIndex) {
+                  final burger = burgerList[burgerIndex];
                   return InkWell(
                     onTap: () => viewItem(burger),
                     splashFactory: NoSplash.splashFactory,
@@ -129,11 +119,13 @@ class BurgersPageState extends State<BurgersPage> {
                             child: Text(
                               burger.itemName,
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: 22,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white,
                               ),
                               softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
                             ),
                           ),
                         ],

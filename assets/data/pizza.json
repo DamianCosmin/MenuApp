@@ -1,0 +1,64 @@
+[
+  {
+    "categoryID": 1,
+    "itemID": 1,
+    "itemName": "Pizza Capriciosa",
+    "itemPrice": 27.99,
+    "description": "A rich mix of ham, mushrooms, artichokes, and olives on a classic tomato base.",
+    "photoPath": "assets/images/pizza/template.png"
+  },
+  
+  {
+    "categoryID": 1,
+    "itemID": 2,
+    "itemName": "Pizza Diavola",
+    "itemPrice": 25.50,
+    "description": "Spicy salami, chili flakes, and mozzarella for those who like it hot.",
+    "photoPath": "assets/images/pizza/template.png"
+  },
+
+  {
+    "categoryID": 1,
+    "itemID": 3,
+    "itemName": "Pizza Pepperoni",
+    "itemPrice": 24.99,
+    "description": "Loaded with pepperoni slices and gooey cheese over a tangy tomato base.",
+    "photoPath": "assets/images/pizza/template.png"
+  },
+
+  {
+    "categoryID": 1,
+    "itemID": 4,
+    "itemName": "Pizza Margherita",
+    "itemPrice": 21.00,
+    "description": "A simple and fresh classic with tomato sauce, mozzarella, and basil.",
+    "photoPath": "assets/images/pizza/template.png"
+  },
+
+  {
+    "categoryID": 1,
+    "itemID": 5,
+    "itemName": "Pizza Quattro Formaggi",
+    "itemPrice": 29.90,
+    "description": "A cheesy indulgence with mozzarella, gorgonzola, parmesan, and fontina.",
+    "photoPath": "assets/images/pizza/template.png"
+  },
+
+  {
+    "categoryID": 1,
+    "itemID": 6,
+    "itemName": "Pizza Quattro Stagioni",
+    "itemPrice": 28.75,
+    "description": "Four seasons on a plate: mushrooms, ham, artichokes, and olives in sections.",
+    "photoPath": "assets/images/pizza/template.png"
+  },
+
+  {
+    "categoryID": 1,
+    "itemID": 7,
+    "itemName": "Pizza Chicken",
+    "itemPrice": 26.45,
+    "description": "Tender grilled chicken, onions, and mozzarella on a savory tomato base.",
+    "photoPath": "assets/images/pizza/template.png"
+  }
+]

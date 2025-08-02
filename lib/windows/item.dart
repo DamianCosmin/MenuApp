@@ -56,8 +56,7 @@ class ItemPage extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
                 ),
               ),
             ),
@@ -69,7 +68,7 @@ class ItemPage extends StatelessWidget {
                 child: Text(
                   '${currentItem.itemPrice} RON',
                   style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 26,
                     fontWeight: FontWeight.w500,
                     color: appPriceColor,
                   ),
@@ -110,7 +109,7 @@ class ItemPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CounterButton(initialValue: 1, min: 1, max: 10),
+                  CounterButton(),
                   SizedBox(width: 20),
                   ElevatedButton(
                     onPressed: () {

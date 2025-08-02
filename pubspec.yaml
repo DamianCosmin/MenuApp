@@ -69,7 +69,7 @@ flutter:
     - assets/images/drinks/
     - assets/images/wines/
     - assets/images/desserts/
-    - assets/data/burgers.json
+    - assets/data/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
