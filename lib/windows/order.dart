@@ -102,13 +102,13 @@ class OrderPageState extends State<OrderPage> {
                     backgroundColor: appNavbarColor,
                     textStyle: TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: 28,
+                      fontSize: 24,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
                   ),
-                  child: Text('Place Order'),
+                  child: Text('PLACE ORDER'),
                 ),
               ],
             ),
