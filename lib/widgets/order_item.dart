@@ -40,7 +40,7 @@ class OrderItemState extends State<OrderItem> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 16),
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.all(10),
       width: double.infinity,
       height: currentHeight,
       decoration: BoxDecoration(

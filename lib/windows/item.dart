@@ -113,10 +113,10 @@ class ItemPage extends StatelessWidget {
                   SizedBox(width: 20),
                   ElevatedButton(
                     onPressed: () {
-                      Provider.of<OrderProvider>(
-                        context,
-                        listen: false,
-                      ).addToOrder(currentItem, qty);
+                      context.read<OrderProvider>().addToOrder(
+                        currentItem,
+                        qty,
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(

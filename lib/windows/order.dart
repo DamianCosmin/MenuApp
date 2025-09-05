@@ -93,7 +93,12 @@ class OrderPageState extends State<OrderPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<OrderProvider>().sendOrderToAdmin(
+                      currentOrder,
+                      orderTotal,
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(
                       vertical: 16,

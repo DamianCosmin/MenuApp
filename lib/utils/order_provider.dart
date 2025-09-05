@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:food_app/utils/item_model.dart';
 
@@ -40,5 +42,34 @@ class OrderProvider extends ChangeNotifier {
       sum += item.itemPrice * qty;
     });
     return sum;
+  }
+
+  Future<void> sendOrderToAdmin(Map<ItemModel, int> order, double total) async {
+    final adminUrl = Uri.parse("http://10.0.2.2:5000/api/new_order");
+
+    final itemsList = order.entries.map((entry) {
+      final item = entry.key;
+      final quantity = entry.value;
+      return {
+        "name": item.itemName,
+        "price": item.itemPrice,
+        "quantity": quantity,
+      };
+    }).toList();
+
+    if (itemsList.isNotEmpty) {
+      try {
+        final response = await http.post(
+          adminUrl,
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode({"items": itemsList, "total": total}),
+        );
+
+        print("Response from admin: ${response.body}");
+        clearOrder();
+      } catch (e) {
+        print('Error sending the order: $e');
+      }
+    }
   }
 }
