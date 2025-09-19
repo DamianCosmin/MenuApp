@@ -1,24 +1,16 @@
-import React, {useState} from "react"
+import React from "react"
 import TableIconButton from "./TableIconButton.tsx";
 
 interface GridMapProps {
     rows: number;
     columns: number;
-    mapData: (boolean | null)[][];
+    mapData: (number | null)[][];
+    bookedTablesID: number[];
+    onSelect: (tbl: number | null) => void;
 };
 
-function GridMap({rows, columns, mapData}: GridMapProps) {
+function GridMap({rows, columns, mapData, bookedTablesID, onSelect}: GridMapProps) {
     let tableIndex = 0;
-
-    const [openId, setOpenId] = useState<number | null>(null);
-
-    const handleOpen = (id: number) => {
-        setOpenId(id);
-    };
-
-    const handleClose = () => {
-        setOpenId(null);
-    };
 
     return (
         <div className="table-grid"
@@ -28,10 +20,14 @@ function GridMap({rows, columns, mapData}: GridMapProps) {
             } as React.CSSProperties}
         >
             {mapData.flat().map((cell, index) => {
-                if (!cell) return <div key={index} className="cell table-null" />
-                
+                if (!cell) return <div key={index} className="table-null" />
+
                 tableIndex++;
-                return <TableIconButton key={index} isBooked={tableIndex % 5 === 0} id={tableIndex} isOpen={openId === tableIndex} onOpen={handleOpen} onClose={handleClose}/>
+                const currentIndex = tableIndex;
+                
+                return <TableIconButton key={index} id={currentIndex} 
+                isBooked={bookedTablesID.some(tblID => tblID === currentIndex)} 
+                onOpen={() => onSelect(currentIndex)} />
             })}
         </div>
     );
