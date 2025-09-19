@@ -124,18 +124,26 @@
   justify-content: center;
   margin-top: 120px;
   margin-bottom: 60px;
+  min-width: 340px;
+}
+
+.tables-container {
+  display: flex;
+  flex-direction: row;
+  gap: 3vw;
 }
 
 .table-grid {
   display: grid;
-  grid-template-columns: repeat(var(--grid-cols), 150px);
-  grid-template-rows: repeat(var(--grid-rows), 100px);
-  gap: 25px;
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+  grid-auto-rows: min-content;
+  gap: 1vw;
 }
 
 .table-button {
-  width: 150px;
-  height: 100px;
+  width: 100%;
+  min-width: 60px;
+  aspect-ratio: 3 / 2;
   border: 2px solid orange;
   border-radius: 8px;
   background-color: bisque;
@@ -149,7 +157,7 @@
 .table-button img {
   width: 48px;
   height: 48px;
-  margin-left: 16px;
+  margin-left: 1vw;
   object-fit: contain;
   pointer-events: none;
 }
@@ -159,55 +167,62 @@
   color: #830000;
 }
 
-.table-order {
+.side-order {
   display: block !important;
-  position: fixed;
-  width: 300px;
-  aspect-ratio: 5 / 7;
+  position: relative;
+  width: 20vw;
+  min-width: 260px;
   padding: 16px;
-  border-radius: 8px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #8a430b;
+  border: 2px solid orange;
+  border-radius: 12px;
+  background-color: bisque;
+  color: black;
 }
 
-.table-order-button {
+.side-order-icon {
   position: absolute;
   width: 24px;
   height: 24px;
   top: 10px;
   right: 10px;
   font-size: 24px;
-  color: orangered;
+  color: black;
   cursor: pointer;
 }
 
 
 /* MEDIA QUERIES */
 
+/* On devices smaller than 1440px (medium laptops) */
+@media (max-width: 1440px) {
+  .table-button h3 {
+    font-size: 1.5rem;
+  }
+}
+
 /* On devices smaller than 1280px (small laptops) */
 @media (max-width: 1280px) {
-  .table-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 2fr);
-    gap: 15px;
+  .table-button h3 {
+    font-size: 1.2rem;
   }
 
-  .table-null {
-    display: none;
+  .table-button img {
+    width: 36px;
+    height: 36px;
+    margin-left: 0.5vw;
+  }
+
+  .tables-container {
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+    gap: 5vh;
   }
 }
 
 /* On devices smaller than 768px (tablets) */
 @media (max-width: 768px) {
-  .table-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 2fr);
-    gap: 20px;
-  }
-
-  .table-null {
+  .table-button img {
     display: none;
   }
 }
@@ -218,10 +233,20 @@
     width: 100%;
   }
 
+  .table-button {
+    width: 120px;
+  }
+
+  .table-button img {
+    display: block;
+    width: 48px;
+    height: 48px;
+    margin-left: 1vw;
+  }
+
   .table-grid {
-    display: grid;
-    grid-template-columns: repeat(1, 2fr);
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5vh;
   }
 
   .table-null {
