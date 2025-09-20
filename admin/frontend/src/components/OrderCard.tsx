@@ -13,10 +13,12 @@ type OrderProps = {
     order: Order,
 }
 
+const BACKEND_PORT = 5050;
+
 function OrderCard({order}: OrderProps) {
     const confirmOrder = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/orders/${order.id}`, {
+            const response = await fetch(`http://localhost:${BACKEND_PORT}/api/orders/${order.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ newStatus: "Confirmed" }),
@@ -32,7 +34,7 @@ function OrderCard({order}: OrderProps) {
 
     const deleteOrder = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/orders/${order.id}`, {
+            const response = await fetch(`http://localhost:${BACKEND_PORT}/api/orders/${order.id}`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
             });
@@ -48,7 +50,10 @@ function OrderCard({order}: OrderProps) {
     return (
         <div key={order.id} className="bg-secondary bg-opacity-25 text-light w-100 rounded p-3 mb-4">
             <div className="d-flex justify-content-between align-items-center">
-                <h4 className="mb-1">Order No. {order.id}</h4>
+                {order.status === 'Pending' ? 
+                    <h4 className="mb-1">New Order</h4> : 
+                    <h4 className="mb-1">Order No. {order.id}</h4>
+                }
                 <p className="mb-0">Status: {order.status}</p>
             </div>
 

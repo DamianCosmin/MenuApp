@@ -37,6 +37,8 @@ dependencies:
   google_fonts: ^6.2.1
   provider: ^6.1.5
   http: ^1.5.0
+  mobile_scanner: ^7.0.1
+
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +73,7 @@ flutter:
     - assets/images/wines/
     - assets/images/desserts/
     - assets/data/
+    - assets/qrcodes/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

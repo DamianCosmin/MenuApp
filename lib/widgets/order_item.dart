@@ -18,7 +18,7 @@ class OrderItemState extends State<OrderItem> {
   double currentHeight = 100;
 
   final double defaultHeight = 100;
-  final double expandedHeight = 150;
+  final double expandedHeight = 160;
 
   @override
   void initState() {
@@ -129,7 +129,7 @@ class OrderItemState extends State<OrderItem> {
 
           if (isVisible)
             Container(
-              padding: EdgeInsets.only(top: 6),
+              padding: EdgeInsets.only(top: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

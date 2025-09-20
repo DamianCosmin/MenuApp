@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import OrderCard from "../components/OrderCard.tsx";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5000");
+const BACKEND_PORT = 5050;
+const socket = io(`http://localhost:${BACKEND_PORT}`);
 
 interface OrderItem {
     name: string,
@@ -19,7 +20,7 @@ function OrdersPage() {
     const [orders, setOrders] = useState<Order[] | null>(null);
 
     const fetchOrders = async () => {
-        await fetch("http://localhost:5000/api/orders")
+        await fetch(`http://localhost:${BACKEND_PORT}/api/orders`)
         .then((res) => res.json())
         .then((data: Order[]) => setOrders(data))
         .catch((err) => console.error(err));

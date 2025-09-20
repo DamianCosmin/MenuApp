@@ -5,7 +5,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 
 const app = express();
-const PORT = 5000;
+const PORT = 5050;
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -49,7 +49,7 @@ app.put("/api/orders/:id", (req, res) => {
     return res.status(404).json({ message: "Order to be confirmed not found" });
   }
 
-  if (newStatus) {
+  if (newStatus === 'Confirmed') {
     order.status = newStatus;
     io.emit("orderConfirmed", order);
   }

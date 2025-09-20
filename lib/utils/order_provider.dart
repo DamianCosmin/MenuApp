@@ -3,6 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:food_app/utils/item_model.dart';
 
+const String androidPort = "http://10.0.2.2:5050/api/new_order";
+const String iosPort = "http://192.168.1.140:5050/api/new_order";
+
 class OrderProvider extends ChangeNotifier {
   final Map<ItemModel, int> _currentOrder = {};
 
@@ -45,7 +48,7 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<void> sendOrderToAdmin(Map<ItemModel, int> order, double total) async {
-    final adminUrl = Uri.parse("http://10.0.2.2:5000/api/new_order");
+    final adminUrl = Uri.parse(iosPort);
 
     final itemsList = order.entries.map((entry) {
       final item = entry.key;

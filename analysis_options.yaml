@@ -11,6 +11,7 @@ analyzer:
   errors:
     unused_local_variable: ignore
     avoid_print: ignore
+    unused_import: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:

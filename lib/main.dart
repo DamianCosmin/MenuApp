@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:food_app/utils/style.dart';
@@ -13,6 +16,7 @@ import 'package:food_app/windows/drinks.dart';
 import 'package:food_app/windows/wines.dart';
 import 'package:food_app/windows/desserts.dart';
 import 'package:food_app/windows/order.dart';
+import 'package:food_app/windows/qr_page.dart';
 
 void main() {
   runApp(
@@ -31,6 +35,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     return MaterialApp(
       title: 'Food App',
       initialRoute: '/',
@@ -40,16 +46,19 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Poppins',
       ),
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: const QrPage(),
     );
   }
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final int tableID;
+  const HomePage({super.key, required this.tableID});
 
   @override
   Widget build(BuildContext context) {
+    print('From HomePage Table: $tableID');
+
     final List<String> categoriesTitles = [
       'Burgers',
       'Pizza',
