@@ -1,24 +1,14 @@
-interface OrderItem {
-    name: string,
-    quantity: number,
-}
-
-interface Order {
-    id: number,
-    status: string,
-    items: OrderItem[],
-}
+import { Order } from "../utils/types.ts";
+import { BASE_URL } from "../utils/routes.ts";
 
 type OrderProps = {
     order: Order,
 }
 
-const BACKEND_PORT = 5050;
-
 function OrderCard({order}: OrderProps) {
     const confirmOrder = async () => {
         try {
-            const response = await fetch(`http://localhost:${BACKEND_PORT}/api/orders/${order.id}`, {
+            const response = await fetch(`${BASE_URL}/api/orders/${order.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ newStatus: "Confirmed" }),
@@ -34,7 +24,7 @@ function OrderCard({order}: OrderProps) {
 
     const deleteOrder = async () => {
         try {
-            const response = await fetch(`http://localhost:${BACKEND_PORT}/api/orders/${order.id}`, {
+            const response = await fetch(`${BASE_URL}/api/orders/${order.id}`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
             });
@@ -60,7 +50,7 @@ function OrderCard({order}: OrderProps) {
             <div className="ms-3">
                 {order.items.map((orderItem, orderIndex) => (
                     <p key={orderIndex} className="mb-0">
-                        {orderItem.quantity > 1 ? (orderItem.quantity + 'x ' + orderItem.name) : orderItem.name}
+                        {orderItem.quantity > 1 ? (orderItem.quantity + 'x ' + orderItem.item.itemName) : orderItem.item.itemName}
                     </p>
                 ))}
             </div>

@@ -1,4 +1,3 @@
-// backend/src/server.ts
 import express from "express";
 import cors from "cors";
 import { createServer } from "http";
@@ -12,8 +11,9 @@ const io = new Server(httpServer, {
   cors: { origin: "*" },
 });
 
-let orders: any[] = [];
-let ordersID: number = 1;
+let ORDERS: any[] = [];
+let ORDERS_ID: number = 1;
+let BOOKED_TABLES: number[] = [];
 
 // Middleware
 app.use(cors());
@@ -22,13 +22,13 @@ app.use(express.json());
 // Routes
 app.post("/api/new_order", (req, res) => {
   let newOrder = {
-    id: ordersID,
+    id: ORDERS_ID,
     status: "Pending",
     ...req.body
   }
 
-  orders.push(newOrder);
-  ordersID++;
+  ORDERS.push(newOrder);
+  ORDERS_ID++;
 
   io.emit("newOrder", newOrder);
 
@@ -36,22 +36,26 @@ app.post("/api/new_order", (req, res) => {
   res.status(201).json({ order: newOrder });
 });
 
-app.get("/api/orders", (req, res) => {
-  res.json(orders);
+app.get("/api/orders", (_, res) => {
+  res.json(ORDERS);
 });
 
 app.put("/api/orders/:id", (req, res) => {
   const orderID = parseInt(req.params.id);
   const {newStatus} = req.body;
 
-  const order = orders.find(o => o.id === orderID);
+  const order = ORDERS.find(o => o.id === orderID);
   if (!order) {
     return res.status(404).json({ message: "Order to be confirmed not found" });
   }
 
   if (newStatus === 'Confirmed') {
     order.status = newStatus;
-    io.emit("orderConfirmed", order);
+    io.emit("orderConfirmed", order); 
+
+    if (!BOOKED_TABLES.includes(order.tableID)) {
+      BOOKED_TABLES.push(order.tableID);
+    }
   }
 
   res.json({ message: "Order updated", order });
@@ -60,15 +64,27 @@ app.put("/api/orders/:id", (req, res) => {
 app.delete("/api/orders/:id", (req, res) => {
   const orderID = parseInt(req.params.id);
 
-  const index = orders.findIndex(o => o.id === orderID);
+  const index = ORDERS.findIndex(o => o.id === orderID);
   if (index === -1) {
     return res.status(404).json({ message: "Order to be deleted not found" });
   }
 
-  const deletedOrder = orders.splice(index, 1)[0] // because its an array of deleted items;
+  const deletedOrder = ORDERS.splice(index, 1)[0] // because it's an array of deleted items
   io.emit("orderDeleted", deletedOrder);
 
   res.json({ message: "Order deleted", order: deletedOrder });
+});
+
+app.get("/api/tables/indexes", (_, res) => {
+  res.json(BOOKED_TABLES);
+})
+
+app.get("/api/tables/:tblId", (req, res) => {
+  const givenTable = parseInt(req.params.tblId);
+
+  const orders = ORDERS.filter(o => o.tableID === givenTable);
+
+  res.json(orders);
 });
 
 // Start server

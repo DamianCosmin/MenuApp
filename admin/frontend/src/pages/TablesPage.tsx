@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Order, OrderItem } from "../utils/types.ts";
+import { BASE_URL } from "../utils/routes.ts";
 import GridMap from "../components/GridMap.tsx";
 import SideOrder from "../components/SideOrder.tsx";
 
@@ -9,49 +11,32 @@ const tableMap = [
   [null, 19, 20, 21, 22, 23, null],
 ];
 
-const testOrder = [
-    {name: "Double Cheeseburger", quantity: 2},
-    {name: "Pepsi", quantity: 3},
-    {name: "Cheeseburger", quantity: 4},
-    {name: "Sprite", quantity: 2},
-    {name: "Pancakes", quantity: 1},
-     {name: "Double Cheeseburger", quantity: 2},
-    {name: "Pepsi", quantity: 3},
-    {name: "Cheeseburger", quantity: 4},
-    {name: "Sprite", quantity: 2},
-    {name: "Pancakes", quantity: 1},
-     {name: "Double Cheeseburger", quantity: 2},
-    {name: "Pepsi", quantity: 3},
-    {name: "Cheeseburger", quantity: 4},
-    {name: "Sprite", quantity: 2},
-    {name: "Pancakes", quantity: 1},
-     {name: "Double Cheeseburger", quantity: 2},
-    {name: "Pepsi", quantity: 3},
-    {name: "Cheeseburger", quantity: 4},
-    {name: "Sprite", quantity: 2},
-    {name: "Pancakes", quantity: 1},
-     {name: "Double Cheeseburger", quantity: 2},
-    {name: "Pepsi", quantity: 3},
-    {name: "Cheeseburger", quantity: 4},
-    {name: "Sprite", quantity: 2},
-    {name: "Pancakes", quantity: 1},
-];
-
-const testBookedTables = [
-    {id: 3, order: testOrder},
-    {id: 5, order: testOrder},
-    {id: 8, order: testOrder},
-    {id: 12, order: testOrder},
-    {id: 13, order: testOrder},
-    {id: 16, order: testOrder},
-    {id: 20, order: testOrder},
-];
-
 function TablesPage () {
     const [tableID, setTableID] = useState<number | null>(null);
+    const [bookedTables, setBookesTables] = useState<number[]>([]);
+    const [order, setOrder] = useState<OrderItem[]>([]);
 
-    const testBookedIndexes = testBookedTables.map(tbl => tbl.id);
-    const selectedTable = testBookedTables.find(tbl => tbl.id === tableID);
+    const fetchBookedTables = async () => {
+        const res = await fetch(`${BASE_URL}/api/tables/indexes`);
+        const data = await res.json();
+        
+        setBookesTables(data);
+    }
+
+    const fetchTableOrders = async (tableIndex: number | null) => {
+        if (!tableIndex) return;
+
+        const res = await fetch(`${BASE_URL}/api/tables/${tableIndex}`);
+        const data = await res.json();
+
+        const allItems: OrderItem[] = data.flatMap((order: Order) => 
+            order.items.map((ordItem: OrderItem) => ({item: ordItem.item, quantity: ordItem.quantity})));
+
+        setOrder(allItems);
+    }
+
+    useEffect(() => {fetchBookedTables();}, []);
+    useEffect(() => {fetchTableOrders(tableID);}, [tableID])
 
     return (
         <div className="tables-page">
@@ -62,11 +47,11 @@ function TablesPage () {
                 <h2 className="mb-4">Tables</h2>
                 <div className="tables-container">
                     <GridMap rows={tableMap.length} columns={tableMap[0].length} mapData={tableMap} 
-                    bookedTablesID={testBookedIndexes}
+                    bookedTablesID={bookedTables}
                     onSelect={(id) =>
                     id ? setTableID(id) : setTableID(null)
                     } />
-                    <SideOrder table={tableID !== null ? (selectedTable ? selectedTable : {id: tableID, order: null}) : null} onClose={() => setTableID(null)} />
+                    <SideOrder tableId={tableID} allItems={tableID !== null ? (order ? order : null) : null} onClose={() => setTableID(null)} />
                 </div>
             </div>
         </div>

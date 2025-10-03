@@ -7,7 +7,13 @@ import 'package:food_app/utils/order_provider.dart';
 class OrderItem extends StatefulWidget {
   final ItemModel item;
   final int qty;
-  const OrderItem({super.key, required this.item, required this.qty});
+  final bool editable;
+  const OrderItem({
+    super.key,
+    required this.item,
+    required this.qty,
+    required this.editable,
+  });
 
   @override
   OrderItemState createState() => OrderItemState();
@@ -96,34 +102,41 @@ class OrderItemState extends State<OrderItem> {
                 ),
               ),
 
-              Flexible(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      GestureDetector(
-                        onTap: toggleEditMode,
-                        child: Icon(Icons.edit, size: 28, color: Colors.white),
-                      ),
-
-                      SizedBox(width: 10),
-
-                      GestureDetector(
-                        onTap: () {
-                          context.read<OrderProvider>().removeItem(widget.item);
-                        },
-                        child: Icon(
-                          Icons.delete_outline,
-                          size: 28,
-                          color: Colors.red,
+              if (widget.editable)
+                Flexible(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        GestureDetector(
+                          onTap: toggleEditMode,
+                          child: Icon(
+                            Icons.edit,
+                            size: 28,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ],
+
+                        SizedBox(width: 10),
+
+                        GestureDetector(
+                          onTap: () {
+                            context.read<OrderProvider>().removeItem(
+                              widget.item,
+                            );
+                          },
+                          child: Icon(
+                            Icons.delete_outline,
+                            size: 28,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
 

@@ -1,29 +1,22 @@
 import { useState, useEffect } from "react";
 import OrderCard from "../components/OrderCard.tsx";
 import { io } from "socket.io-client";
+import { Order } from "../utils/types.ts";
+import { BASE_URL } from "../utils/routes.ts";
 
-const BACKEND_PORT = 5050;
-const socket = io(`http://localhost:${BACKEND_PORT}`);
-
-interface OrderItem {
-    name: string,
-    quantity: number,
-}
-
-interface Order {
-    id: number,
-    status: string,
-    items: OrderItem[],
-}
+const socket = io(`${BASE_URL}`);
 
 function OrdersPage() {
     const [orders, setOrders] = useState<Order[] | null>(null);
 
     const fetchOrders = async () => {
-        await fetch(`http://localhost:${BACKEND_PORT}/api/orders`)
-        .then((res) => res.json())
-        .then((data: Order[]) => setOrders(data))
-        .catch((err) => console.error(err));
+        try {
+            const res = await fetch(`${BASE_URL}/api/orders`);
+            const data: Order[] = await res.json();
+            setOrders(data);
+        } catch (err) {
+            console.error("Error fetching orders:", err);
+        }
     }
 
     useEffect(() => {

@@ -1,25 +1,26 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { TableItem } from './Models.tsx';
+import { OrderItem } from '../utils/types.ts';
 
 interface SideOrderProps {
-    table: TableItem | null;
+    tableId: number | null;
+    allItems: OrderItem[] | null;
     onClose: () => void;
 }
 
-function SideOrder ({table, onClose} : SideOrderProps) {
-    if (!table) return null;
+function SideOrder ({tableId, allItems, onClose} : SideOrderProps) {
+    if (!allItems) return null;
 
     return (
         <div className="side-order">
             <FontAwesomeIcon icon={faXmark} className="side-order-icon" onClick={onClose}/>
-            <h4 className="text-center mt-1">Table {table.id}</h4>
-            {table.order == null ? 
+            <h4 className="text-center mt-1">Table {tableId}</h4>
+            {allItems.length === 0 ? 
                 <p>Empty table</p> : 
                 <div>
-                    {table.order.map((item, index) => (
+                    {allItems.map((ordItem, index) => (
                         <p key={index} className="mb-0">
-                            {item.quantity > 1 ? (item.quantity + 'x ' + item.name) : item.name}
+                            {ordItem.quantity > 1 ? (ordItem.quantity + 'x ' + ordItem.item.itemName) : ordItem.item.itemName}
                         </p>
                     ))}
                 </div>

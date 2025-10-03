@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:food_app/utils/table_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:food_app/utils/style.dart';
@@ -18,6 +19,7 @@ class OrderPageState extends State<OrderPage> {
   Widget build(BuildContext context) {
     final currentOrder = context.watch<OrderProvider>().currentOrder;
     final orderTotal = context.watch<OrderProvider>().getOrderTotal();
+    final tableID = context.read<TableProvider>().tableID;
 
     return Scaffold(
       extendBody: true,
@@ -56,7 +58,11 @@ class OrderPageState extends State<OrderPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ...currentOrder.entries.map((entry) {
-              return OrderItem(item: entry.key, qty: entry.value);
+              return OrderItem(
+                item: entry.key,
+                qty: entry.value,
+                editable: true,
+              );
             }),
 
             if (orderTotal > 0)
@@ -96,6 +102,7 @@ class OrderPageState extends State<OrderPage> {
                   onPressed: () {
                     context.read<OrderProvider>().sendOrderToAdmin(
                       currentOrder,
+                      tableID,
                       orderTotal,
                     );
                   },

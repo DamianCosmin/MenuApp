@@ -17,13 +17,24 @@ class ItemModel {
 
   factory ItemModel.fromJson(Map<String, dynamic> json) {
     return ItemModel(
-      categoryID: json['categoryID'],
-      itemID: json['itemID'],
-      itemName: json['itemName'],
+      categoryID: json['categoryID'] as int,
+      itemID: json['itemID'] as int,
+      itemName: json['itemName'] as String,
       itemPrice: (json['itemPrice'] as num).toDouble(),
-      description: json['description'],
-      photoPath: json['photoPath'],
+      description: json['description'] as String,
+      photoPath: json['photoPath'] as String,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "categoryID": categoryID,
+      "itemID": itemID,
+      "itemName": itemName,
+      "itemPrice": itemPrice,
+      "description": description,
+      "photoPath": photoPath,
+    };
   }
 
   @override

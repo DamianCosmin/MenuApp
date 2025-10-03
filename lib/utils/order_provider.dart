@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:food_app/utils/item_model.dart';
-
-const String androidPort = "http://10.0.2.2:5050/api/new_order";
-const String iosPort = "http://192.168.1.140:5050/api/new_order";
+import 'package:food_app/utils/routes.dart';
 
 class OrderProvider extends ChangeNotifier {
   final Map<ItemModel, int> _currentOrder = {};
@@ -47,17 +45,17 @@ class OrderProvider extends ChangeNotifier {
     return sum;
   }
 
-  Future<void> sendOrderToAdmin(Map<ItemModel, int> order, double total) async {
-    final adminUrl = Uri.parse(iosPort);
+  Future<void> sendOrderToAdmin(
+    Map<ItemModel, int> order,
+    int table,
+    double total,
+  ) async {
+    final adminUrl = Uri.parse('${API_ROUTE}new_order/');
 
     final itemsList = order.entries.map((entry) {
       final item = entry.key;
       final quantity = entry.value;
-      return {
-        "name": item.itemName,
-        "price": item.itemPrice,
-        "quantity": quantity,
-      };
+      return {"item": item.toJson(), "quantity": quantity};
     }).toList();
 
     if (itemsList.isNotEmpty) {
@@ -65,7 +63,11 @@ class OrderProvider extends ChangeNotifier {
         final response = await http.post(
           adminUrl,
           headers: {"Content-Type": "application/json"},
-          body: jsonEncode({"items": itemsList, "total": total}),
+          body: jsonEncode({
+            "tableID": table,
+            "items": itemsList,
+            "total": total,
+          }),
         );
 
         print("Response from admin: ${response.body}");
