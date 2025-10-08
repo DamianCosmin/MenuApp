@@ -50,7 +50,6 @@ class QrPageState extends State<QrPage> {
               mobileController.stop();
 
               print('QR Code Address: $qrUrl');
-              print('Tables Url: $tablesUrl');
 
               Uri uriScanned = Uri.parse(qrUrl);
               Uri uriValid = Uri.parse(tablesUrl);

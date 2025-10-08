@@ -15,12 +15,39 @@ class FeaturesPage extends StatefulWidget {
   State<FeaturesPage> createState() => FeaturesPageState();
 }
 
-class FeaturesPageState extends State<FeaturesPage> {
+class FeaturesPageState extends State<FeaturesPage> with RouteAware {
+  bool _isInit = true;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      routeObserver.subscribe(this, route);
+    }
+
+    if (_isInit) {
+      context.read<TableProvider>().fetchPreviousOrder();
+      _isInit = false;
+    }
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  // Called when coming back to this page
+  @override
+  void didPopNext() {
+    context.read<TableProvider>().fetchPreviousOrder();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final requestBoxWidth = screenWidth * 0.35;
-    final requestBoxHeight = requestBoxWidth * 2.5;
+
     final tableId = context.read<TableProvider>().tableID;
     final prevOrder = context.watch<TableProvider>().previousOrder;
     final tableTotal = context.read<TableProvider>().getTableTotal();
@@ -41,6 +68,21 @@ class FeaturesPageState extends State<FeaturesPage> {
       'assets/icons/blanket.png',
     ];
 
+    void handleOrderMore() {
+      final currentRoute = ModalRoute.of(context);
+
+      if (currentRoute != null && currentRoute.isFirst) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      } else if (currentRoute != null) {
+        Navigator.pop(context);
+      } else {
+        print("Error in accessing HomePage from FeaturesPage!");
+      }
+    }
+
     return Scaffold(
       extendBody: true,
       appBar: AppBar(
@@ -53,177 +95,182 @@ class FeaturesPageState extends State<FeaturesPage> {
         actions: [],
       ),
 
-      body: SingleChildScrollView(
-        padding: EdgeInsets.only(
-          top: 32,
-          bottom: itemNavbarHeight + MediaQuery.of(context).viewPadding.bottom,
-          left: 16,
-          right: 16,
-        ),
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Previously ordered',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
+      body: RefreshIndicator(
+        color: appNavbarColor,
+        backgroundColor: appSecondaryColor,
+        strokeWidth: 2,
+        onRefresh: () async {
+          context.read<TableProvider>().fetchPreviousOrder();
+          setState(() {});
+        },
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(
+            top: 32,
+            bottom:
+                itemNavbarHeight + MediaQuery.of(context).viewPadding.bottom,
+            left: 16,
+            right: 16,
+          ),
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Previously ordered',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.left,
               ),
-              textAlign: TextAlign.left,
-            ),
 
-            Column(
-              children: prevOrder.map((orderItem) {
-                return OrderItem(
-                  item: orderItem.key,
-                  qty: orderItem.value,
-                  editable: false,
-                );
-              }).toList(),
-            ),
-
-            Text(
-              'Table total: ${tableTotal.toStringAsFixed(2)} RON',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.left,
-            ),
-
-            SizedBox(height: 16),
-
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+              Column(
+                children: prevOrder.map((orderItem) {
+                  return OrderItem(
+                    item: orderItem.key,
+                    qty: orderItem.value,
+                    editable: false,
                   );
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: MediaQuery.of(context).size.width * 0.15,
-                  ),
-                  backgroundColor: appNavbarColor,
-                  textStyle: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 22,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
+                }).toList(),
+              ),
+
+              Text(
+                'Table total: ${tableTotal.toStringAsFixed(2)} RON',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
                 ),
-                child: Text('ORDER MORE'),
+                textAlign: TextAlign.left,
               ),
-            ),
 
-            SizedBox(height: 16),
+              SizedBox(height: 16),
 
-            Text(
-              'Popular requests',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.left,
-            ),
-
-            SizedBox(height: 16),
-
-            GridView.count(
-              crossAxisCount: 2,
-              physics: NeverScrollableScrollPhysics(),
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              padding: EdgeInsets.only(bottom: 16),
-              shrinkWrap: true,
-              children: List.generate(
-                2,
-                (index) => ElevatedButton(
-                  onPressed: () {},
+              Center(
+                child: ElevatedButton(
+                  onPressed: handleOrderMore,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: appSecondaryColor,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: MediaQuery.of(context).size.width * 0.15,
+                    ),
+                    backgroundColor: appNavbarColor,
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 22,
+                    ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.circular(20),
+                      borderRadius: BorderRadius.circular(50),
                     ),
                   ),
-                  child: SizedBox.expand(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          requestsIconPaths[index],
-                          color: Colors.white,
-                          width: 64,
-                          height: 64,
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          requestNames[index],
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: Text('ORDER MORE'),
                 ),
               ),
-            ),
 
-            GridView.count(
-              crossAxisCount: 3,
-              physics: NeverScrollableScrollPhysics(),
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              padding: EdgeInsets.only(bottom: 16),
-              shrinkWrap: true,
-              children: List.generate(
-                3,
-                (index) => ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appSecondaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.circular(20),
+              SizedBox(height: 16),
+
+              Text(
+                'Popular requests',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.left,
+              ),
+
+              SizedBox(height: 16),
+
+              GridView.count(
+                crossAxisCount: 2,
+                physics: NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                padding: EdgeInsets.only(bottom: 16),
+                shrinkWrap: true,
+                children: List.generate(
+                  2,
+                  (index) => ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: appSecondaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadiusGeometry.circular(20),
+                      ),
                     ),
-                  ),
-                  child: SizedBox.expand(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          requestsIconPaths[index + 2],
-                          color: Colors.white,
-                          width: 48,
-                          height: 48,
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          requestNames[index + 2],
-                          style: TextStyle(
+                    child: SizedBox.expand(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            requestsIconPaths[index],
                             color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
+                            width: 64,
+                            height: 64,
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 8),
+                          Text(
+                            requestNames[index],
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+
+              GridView.count(
+                crossAxisCount: 3,
+                physics: NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                padding: EdgeInsets.only(bottom: 16),
+                shrinkWrap: true,
+                children: List.generate(
+                  3,
+                  (index) => ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: appSecondaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadiusGeometry.circular(20),
+                      ),
+                    ),
+                    child: SizedBox.expand(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            requestsIconPaths[index + 2],
+                            color: Colors.white,
+                            width: 48,
+                            height: 48,
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            requestNames[index + 2],
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
 

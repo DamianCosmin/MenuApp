@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
-import OrderCard from "../components/OrderCard.tsx";
-import { io } from "socket.io-client";
-import { Order } from "../utils/types.ts";
-import { BASE_URL } from "../utils/routes.ts";
 
-const socket = io(`${BASE_URL}`);
+import { BASE_URL, socket } from "../utils/routes.ts";
+import OrderCard from "../components/OrderCard.tsx";
+import { Order } from "../utils/types.ts";
 
 function OrdersPage() {
     const [orders, setOrders] = useState<Order[] | null>(null);
@@ -26,7 +24,7 @@ function OrdersPage() {
             setOrders(prev => prev ? [...prev, order] : [order]);
         });
 
-        socket.on("orderConfirmed", (updatedOrder) => {
+        socket.on("orderConfirmed", ({updatedOrder, _}) => {
             setOrders(prev =>
             prev ? prev.map(o => (o.id === updatedOrder.id ? updatedOrder : o)) : []
             );

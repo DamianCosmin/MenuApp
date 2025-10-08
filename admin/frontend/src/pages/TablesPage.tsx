@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+
 import { Order, OrderItem } from "../utils/types.ts";
-import { BASE_URL } from "../utils/routes.ts";
+import { BASE_URL, socket } from "../utils/routes.ts";
 import GridMap from "../components/GridMap.tsx";
 import SideOrder from "../components/SideOrder.tsx";
 
@@ -35,7 +36,17 @@ function TablesPage () {
         setOrder(allItems);
     }
 
-    useEffect(() => {fetchBookedTables();}, []);
+    useEffect(() => {
+        fetchBookedTables();
+        
+        socket.on("orderConfirmed", ({_, indexes}) => {
+            setBookesTables(indexes);
+        });
+
+        return () => {
+            socket.off("orderConfirmed");
+        };
+    }, []);
     useEffect(() => {fetchTableOrders(tableID);}, [tableID])
 
     return (

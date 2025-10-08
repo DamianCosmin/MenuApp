@@ -19,3 +19,5 @@ const LinearGradient bottomNavbarGradient = LinearGradient(
   begin: Alignment.topCenter,
   end: Alignment.bottomCenter,
 );
+
+const Duration mainOptionsDuration = Duration(milliseconds: 300);

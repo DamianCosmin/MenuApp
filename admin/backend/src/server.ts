@@ -51,11 +51,12 @@ app.put("/api/orders/:id", (req, res) => {
 
   if (newStatus === 'Confirmed') {
     order.status = newStatus;
-    io.emit("orderConfirmed", order); 
 
     if (!BOOKED_TABLES.includes(order.tableID)) {
       BOOKED_TABLES.push(order.tableID);
     }
+
+    io.emit("orderConfirmed", {updatedOrder: order, indexes: BOOKED_TABLES}); 
   }
 
   res.json({ message: "Order updated", order });
@@ -82,7 +83,7 @@ app.get("/api/tables/indexes", (_, res) => {
 app.get("/api/tables/:tblId", (req, res) => {
   const givenTable = parseInt(req.params.tblId);
 
-  const orders = ORDERS.filter(o => o.tableID === givenTable);
+  const orders = ORDERS.filter(o => o.tableID === givenTable && o.status === 'Confirmed');
 
   res.json(orders);
 });

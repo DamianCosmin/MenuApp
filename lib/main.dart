@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:food_app/windows/features.dart';
 import 'package:provider/provider.dart';
 
 import 'package:food_app/utils/style.dart';
@@ -19,6 +19,9 @@ import 'package:food_app/windows/wines.dart';
 import 'package:food_app/windows/desserts.dart';
 import 'package:food_app/windows/order.dart';
 import 'package:food_app/windows/qr_page.dart';
+import 'package:food_app/windows/features.dart';
+
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 void main() {
   runApp(
@@ -49,13 +52,39 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Poppins',
       ),
       debugShowCheckedModeBanner: false,
+      navigatorObservers: [routeObserver],
       home: const QrPage(),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  HomePageState createState() => HomePageState();
+}
+
+class HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  bool showOptions = false;
+  late AnimationController mainOptionsAnimationController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    mainOptionsAnimationController = AnimationController(
+      vsync: this,
+      duration: mainOptionsDuration,
+    );
+  }
+
+  @override
+  void dispose() {
+    mainOptionsAnimationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +118,15 @@ class HomePage extends StatelessWidget {
       6: const DessertsPage(),
     };
 
+    void handleOptions() {
+      setState(() {
+        showOptions = !showOptions;
+        showOptions
+            ? mainOptionsAnimationController.forward()
+            : mainOptionsAnimationController.reverse();
+      });
+    }
+
     void viewCategory(int index) {
       final page = categoriesPages[index] ?? const NotFoundPage();
 
@@ -98,7 +136,27 @@ class HomePage extends StatelessWidget {
     void viewCart() {
       final page = OrderPage();
 
+      if (showOptions) {
+        handleOptions();
+      }
       Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+    }
+
+    void viewFeatures() {
+      final page = FeaturesPage();
+      final currentRoute = ModalRoute.of(context);
+
+      if (showOptions) {
+        handleOptions();
+      }
+
+      if (currentRoute != null && currentRoute.isFirst) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+      } else if (currentRoute != null) {
+        Navigator.pop(context);
+      } else {
+        print("Error in accessing FeaturesPage from HomePage!");
+      }
     }
 
     final List<Widget> menuCategories = List.generate(
@@ -139,70 +197,127 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       extendBody: true,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            backgroundColor: appNavbarColor,
-            expandedHeight: 300,
-            floating: false,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Opacity(
-                opacity: 0.85,
-                child: Image(
-                  image: AssetImage('assets/images/restaurant2.png'),
-                  fit: BoxFit.cover,
+      body: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                backgroundColor: appNavbarColor,
+                expandedHeight: 300,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Opacity(
+                    opacity: 0.85,
+                    child: Image(
+                      image: AssetImage('assets/images/restaurant2.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  title: Text(
+                    'MENU',
+                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500),
+                    textAlign: TextAlign.center,
+                  ),
+                  titlePadding: EdgeInsets.symmetric(vertical: 4),
+                  centerTitle: true,
                 ),
               ),
-              title: Text(
-                'MENU',
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
+
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: EdgeInsets.all(32),
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: menuCategories,
+                    ),
+                  ),
+                ),
               ),
-              titlePadding: EdgeInsets.symmetric(vertical: 4),
-              centerTitle: true,
-            ),
+            ],
           ),
 
-          SliverToBoxAdapter(
-            child: Container(
-              padding: EdgeInsets.all(32),
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: menuCategories,
-                ),
+          Positioned(
+            bottom: MediaQuery.of(context).viewPadding.bottom + 16,
+            right: MediaQuery.of(context).viewPadding.right + 12,
+            child: SizedBox(
+              width: 100,
+              height: 200,
+              child: Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.bottomCenter,
+                children: [
+                  AnimatedPositioned(
+                    width: 56,
+                    height: 56,
+                    duration: mainOptionsDuration,
+                    bottom: showOptions ? 156 : 0,
+                    child: AnimatedOpacity(
+                      opacity: showOptions ? 1 : 0,
+                      duration: mainOptionsDuration,
+                      child: Material(
+                        color: appNavbarColor,
+                        shape: CircleBorder(),
+                        clipBehavior: Clip.hardEdge,
+                        child: IconButton(
+                          onPressed: viewFeatures,
+                          iconSize: 30,
+                          icon: Icon(Icons.library_books_rounded),
+                          color: Colors.white,
+                          splashColor: Colors.transparent,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  AnimatedPositioned(
+                    width: 56,
+                    height: 56,
+                    duration: mainOptionsDuration,
+                    bottom: showOptions ? 90 : 0,
+                    child: AnimatedOpacity(
+                      opacity: showOptions ? 1 : 0,
+                      duration: mainOptionsDuration,
+                      child: Material(
+                        color: appNavbarColor,
+                        shape: CircleBorder(),
+                        clipBehavior: Clip.hardEdge,
+                        child: IconButton(
+                          onPressed: viewCart,
+                          iconSize: 30,
+                          icon: Icon(Icons.shopping_cart_outlined),
+                          color: Colors.white,
+                          splashColor: Colors.transparent,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Material(
+                    color: appNavbarColor,
+                    shape: CircleBorder(),
+                    child: SizedBox(
+                      width: 80,
+                      height: 80,
+                      child: IconButton(
+                        onPressed: handleOptions,
+                        iconSize: 44,
+                        icon: AnimatedIcon(
+                          icon: AnimatedIcons.menu_close,
+                          progress: mainOptionsAnimationController,
+                        ),
+                        color: Colors.white,
+                        splashColor: Colors.transparent,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewPadding.bottom + 8,
-          right: MediaQuery.of(context).viewPadding.right + 24,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Material(
-              color: appNavbarColor,
-              shape: CircleBorder(),
-              child: SizedBox(
-                width: 80,
-                height: 80,
-                child: IconButton(
-                  onPressed: viewCart,
-                  icon: Icon(Icons.shopping_cart_outlined),
-                  iconSize: 44,
-                  color: Colors.white,
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

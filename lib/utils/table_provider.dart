@@ -17,7 +17,6 @@ class TableProvider extends ChangeNotifier {
   Future<bool?> setTableID(int scannedID) async {
     final String param = scannedID.toString();
     final adminUrl = Uri.parse('$tablesUrl$param');
-    print(adminUrl);
 
     try {
       final response = await http.get(
@@ -62,5 +61,35 @@ class TableProvider extends ChangeNotifier {
       sum += entry.key.itemPrice * entry.value;
     }
     return sum;
+  }
+
+  void fetchPreviousOrder() async {
+    final adminUrl = Uri.parse('$tablesUrl${_tableID.toString()}');
+
+    try {
+      final response = await http.get(
+        adminUrl,
+        headers: {"Content-Type": "application/json"},
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (data is List && data.isNotEmpty) {
+        final orders = data
+            .map<OrderModel>(
+              (orderJson) =>
+                  OrderModel.fromJson(orderJson as Map<String, dynamic>),
+            )
+            .toList();
+
+        _previousOrder = orders
+            .expand<MapEntry<ItemModel, int>>((order) => order.orderItems)
+            .toList();
+
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Error in getting the table orders: $e');
+    }
   }
 }
