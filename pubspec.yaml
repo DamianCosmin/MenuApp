@@ -38,6 +38,8 @@ dependencies:
   provider: ^6.1.5
   http: ^1.5.0
   mobile_scanner: ^7.0.1
+  socket_io_client: ^3.1.2
+  lottie: ^3.3.2
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +76,7 @@ flutter:
     - assets/data/
     - assets/qrcodes/
     - assets/icons/
+    - assets/animations/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

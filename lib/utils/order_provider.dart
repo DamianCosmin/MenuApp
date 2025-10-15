@@ -45,7 +45,7 @@ class OrderProvider extends ChangeNotifier {
     return sum;
   }
 
-  Future<void> sendOrderToAdmin(
+  Future<bool> sendOrderToAdmin(
     Map<ItemModel, int> order,
     int table,
     double total,
@@ -71,10 +71,16 @@ class OrderProvider extends ChangeNotifier {
         );
 
         print("Response from admin: ${response.body}");
-        clearOrder();
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          clearOrder();
+          return true;
+        }
+        return false;
       } catch (e) {
         print('Error sending the order: $e');
       }
     }
+    return false;
   }
 }

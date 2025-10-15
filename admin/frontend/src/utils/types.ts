@@ -7,6 +7,10 @@ export interface Item {
   photoPath: string;
 }
 
+export function equalItems(a: Item, b: Item) {
+  return a.categoryID == b.categoryID && a.itemID == b.itemID;
+}
+
 export interface OrderItem {
   item: Item;
   quantity: number;

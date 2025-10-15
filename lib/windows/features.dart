@@ -48,7 +48,6 @@ class FeaturesPageState extends State<FeaturesPage> with RouteAware {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    final tableId = context.read<TableProvider>().tableID;
     final prevOrder = context.watch<TableProvider>().previousOrder;
     final tableTotal = context.read<TableProvider>().getTableTotal();
 
@@ -135,15 +134,26 @@ class FeaturesPageState extends State<FeaturesPage> with RouteAware {
                 }).toList(),
               ),
 
-              Text(
-                'Table total: ${tableTotal.toStringAsFixed(2)} RON',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
+              if (prevOrder.isEmpty)
+                Padding(
+                  padding: EdgeInsets.only(left: 12),
+                  child: Text(
+                    'Nothing ordered so far',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    textAlign: TextAlign.left,
+                  ),
                 ),
-                textAlign: TextAlign.left,
-              ),
+
+              if (prevOrder.isNotEmpty)
+                Text(
+                  'Table total: ${tableTotal.toStringAsFixed(2)} RON',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
 
               SizedBox(height: 16),
 

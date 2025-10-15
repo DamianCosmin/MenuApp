@@ -39,9 +39,28 @@ class TableProvider extends ChangeNotifier {
               )
               .toList();
 
-          _previousOrder = orders
-              .expand<MapEntry<ItemModel, int>>((order) => order.orderItems)
-              .toList();
+          final Map<ItemModel, int> mergedItems = {};
+
+          for (final order in orders) {
+            for (final entry in order.orderItems.toList()) {
+              final item = entry.key;
+              final quantity = entry.value;
+
+              final existingItem = mergedItems.keys.firstWhere(
+                (i) => i == item,
+                orElse: () => item,
+              );
+
+              if (mergedItems.containsKey(existingItem)) {
+                mergedItems[existingItem] =
+                    mergedItems[existingItem]! + quantity;
+              } else {
+                mergedItems[item] = quantity;
+              }
+            }
+          }
+
+          _previousOrder = mergedItems.entries.toList();
 
           notifyListeners();
         }
@@ -82,9 +101,30 @@ class TableProvider extends ChangeNotifier {
             )
             .toList();
 
-        _previousOrder = orders
-            .expand<MapEntry<ItemModel, int>>((order) => order.orderItems)
-            .toList();
+        final Map<ItemModel, int> mergedItems = {};
+
+        for (final order in orders) {
+          for (final entry in order.orderItems.toList()) {
+            final item = entry.key;
+            final quantity = entry.value;
+
+            final existingItem = mergedItems.keys.firstWhere(
+              (i) => i == item,
+              orElse: () => item,
+            );
+
+            if (mergedItems.containsKey(existingItem)) {
+              mergedItems[existingItem] = mergedItems[existingItem]! + quantity;
+            } else {
+              mergedItems[item] = quantity;
+            }
+          }
+        }
+
+        // _previousOrder = orders
+        //     .expand<MapEntry<ItemModel, int>>((order) => order.orderItems)
+        //     .toList();
+        _previousOrder = mergedItems.entries.toList();
 
         notifyListeners();
       }

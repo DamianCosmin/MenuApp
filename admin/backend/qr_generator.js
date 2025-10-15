@@ -1,6 +1,6 @@
 import QRCode from "qrcode";
 
-const baseUrl = "http://192.168.68.102:5050/api/tables/";
+const baseUrl = "http://192.168.68.100:5050/api/tables/";
 
 for (let i = 1; i <= 23; i++) {
   const url = `${baseUrl}${i}`;

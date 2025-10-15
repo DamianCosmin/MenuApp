@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Order, OrderItem } from "../utils/types.ts";
+import { equalItems, Order, OrderItem } from "../utils/types.ts";
 import { BASE_URL, socket } from "../utils/routes.ts";
 import GridMap from "../components/GridMap.tsx";
 import SideOrder from "../components/SideOrder.tsx";
@@ -17,6 +17,22 @@ function TablesPage () {
     const [bookedTables, setBookesTables] = useState<number[]>([]);
     const [order, setOrder] = useState<OrderItem[]>([]);
 
+    const mergeOrderItems = (allItems: OrderItem[]): OrderItem[] => {
+        const merged: OrderItem[] = [];
+
+        for (var ordItem of allItems) {
+            var existingItem = merged.find((oi) => equalItems(oi.item, ordItem.item));
+
+            if (existingItem) {
+                existingItem.quantity += ordItem.quantity;
+            } else {
+                merged.push({...ordItem});
+            }
+        }
+
+        return merged;
+    }
+
     const fetchBookedTables = async () => {
         const res = await fetch(`${BASE_URL}/api/tables/indexes`);
         const data = await res.json();
@@ -29,17 +45,24 @@ function TablesPage () {
 
         const res = await fetch(`${BASE_URL}/api/tables/${tableIndex}`);
         const data = await res.json();
-
+        
         const allItems: OrderItem[] = data.flatMap((order: Order) => 
             order.items.map((ordItem: OrderItem) => ({item: ordItem.item, quantity: ordItem.quantity})));
 
-        setOrder(allItems);
+        const mergedItems = mergeOrderItems(allItems);
+
+        setOrder(mergedItems);
     }
 
     useEffect(() => {
         fetchBookedTables();
         
-        socket.on("orderConfirmed", ({_, indexes}) => {
+        socket.on("orderConfirmed", ({updatedOrder, indexes}) => {
+            setOrder((prev) => {
+                const allItems = prev ? [...prev, ...updatedOrder.items] : [...updatedOrder.items];
+                const mergedItems = mergeOrderItems(allItems);
+                return mergedItems;
+            });
             setBookesTables(indexes);
         });
 
@@ -47,6 +70,7 @@ function TablesPage () {
             socket.off("orderConfirmed");
         };
     }, []);
+
     useEffect(() => {fetchTableOrders(tableID);}, [tableID])
 
     return (
