@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:food_app/utils/item_model.dart';
 import 'package:food_app/utils/routes.dart';
+import 'package:food_app/utils/socket_service.dart';
 
 class OrderProvider extends ChangeNotifier {
   final Map<ItemModel, int> _currentOrder = {};
@@ -49,6 +50,7 @@ class OrderProvider extends ChangeNotifier {
     Map<ItemModel, int> order,
     int table,
     double total,
+    SocketService socket,
   ) async {
     final adminUrl = Uri.parse('${API_ROUTE}new_order/');
 
@@ -73,6 +75,12 @@ class OrderProvider extends ChangeNotifier {
         print("Response from admin: ${response.body}");
 
         if (response.statusCode == 200 || response.statusCode == 201) {
+          final data = jsonDecode(response.body);
+          final int orderId = data['order']['id'];
+          print("From Order Provider - order ID: $orderId");
+
+          socket.joinOrderRoom(orderId);
+
           clearOrder();
           return true;
         }

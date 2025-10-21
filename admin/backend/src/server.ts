@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { v4 as uuidv4 } from "uuid";
 
 const app = express();
 const PORT = 5050;
@@ -14,6 +15,13 @@ const io = new Server(httpServer, {
 let ORDERS: any[] = [];
 let ORDERS_ID: number = 1;
 let BOOKED_TABLES: number[] = [];
+
+io.on("connection", (socket) => {
+  socket.on("joinOrderRoom", (orderId) => {
+    socket.join(orderId.toString());
+    console.log(`Socket ${socket.id} joined room ${orderId} from backend`);
+  });
+});
 
 // Middleware
 app.use(cors());
@@ -56,7 +64,8 @@ app.put("/api/orders/:id", (req, res) => {
       BOOKED_TABLES.push(order.tableID);
     }
 
-    io.emit("orderConfirmed", {updatedOrder: order, indexes: BOOKED_TABLES}); 
+    io.emit("orderConfirmed", {updatedOrder: order, indexes: BOOKED_TABLES});
+    io.to(order.id.toString()).emit("adminConfirmed");
   }
 
   res.json({ message: "Order updated", order });
@@ -72,6 +81,7 @@ app.delete("/api/orders/:id", (req, res) => {
 
   const deletedOrder = ORDERS.splice(index, 1)[0] // because it's an array of deleted items
   io.emit("orderDeleted", deletedOrder);
+  io.to(deletedOrder.id.toString()).emit("adminDeclined");
 
   res.json({ message: "Order deleted", order: deletedOrder });
 });

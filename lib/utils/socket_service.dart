@@ -20,11 +20,16 @@ class SocketService {
   }
 
   void onAdminConfirmed(Function(dynamic) callback) {
-    socket.on('orderConfirmed', callback);
+    socket.on('adminConfirmed', callback);
   }
 
   void onAdminDecline(Function(dynamic) callback) {
-    socket.on('orderDeleted', callback);
+    socket.on('adminDeclined', callback);
+  }
+
+  void joinOrderRoom(int orderId) {
+    socket.emit('joinOrderRoom', orderId);
+    print('🛎️ Joined room for order $orderId');
   }
 
   void dispose() {

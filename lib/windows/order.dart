@@ -168,6 +168,7 @@ class OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
                               currentOrder,
                               tableID,
                               orderTotal,
+                              socketService,
                             );
 
                         if (response) {
