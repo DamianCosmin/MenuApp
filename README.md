@@ -42,4 +42,4 @@ Designed to offer a polished experience and instant visual feedback on users' or
 - 🔜 In-app payment functionalities
 
 ## Author
-Developed with passion by **</ [Damian Cosmin](http://github.com/D`amianCosmin) >**
+Developed with passion by **</ [Damian Cosmin](http://github.com/DamianCosmin) >**
