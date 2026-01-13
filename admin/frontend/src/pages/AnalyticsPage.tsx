@@ -79,20 +79,27 @@ function AnalyticsPage() {
     return (
         <div className="analytics-page">
             <div className="container text-light">
-                <div className="d-flex flex-row flex-wrap justify-content-center mb-4">
-                    {primaryButtons.map(btn => (
-                        <label key={btn}>
-                            <input type='checkbox' checked={primary === btn} className='analytics-tag' onChange={() => handlePrimaryButtons(btn as "ALL" | "MAINS" | "DRINKS")}/>
-                            <span>{btn}</span>
-                        </label>
-                    ))}
+                <div className='d-flex flex-column flex-md-row justify-content-center align-items-center mb-4'>
+                    <div className="d-flex flex-row flex-wrap justify-content-center">
+                        {primaryButtons.map(btn => (
+                            <label key={btn}>
+                                <input type='checkbox' checked={primary === btn} className='analytics-tag' onChange={() => handlePrimaryButtons(btn as "ALL" | "MAINS" | "DRINKS")}/>
+                                <span>{btn}</span>
+                            </label>
+                        ))}
+                    </div>
+                    
+                    <hr className="d-md-none w-50 my-3 text-revenue opacity-50" />
+                    <div className="vr d-none d-md-block mx-2 text-revenue opacity-50"></div>
 
-                    {secondaryButtons.map(btn => (
-                        <label key={btn}>
-                            <input type='checkbox' checked={secondary.includes(btn)} className='analytics-tag'  onChange={() => {handleSecondaryButtons(btn)}}/>
-                            <span>{btn}</span>
-                        </label>
-                    ))}
+                    <div className="d-flex flex-row flex-wrap justify-content-center">
+                        {secondaryButtons.map(btn => (
+                            <label key={btn}>
+                                <input type='checkbox' checked={secondary.includes(btn)} className='analytics-tag'  onChange={() => {handleSecondaryButtons(btn)}}/>
+                                <span>{btn}</span>
+                            </label>
+                        ))}
+                    </div>
                 </div>
 
                 <div className="row g-4 mb-4">

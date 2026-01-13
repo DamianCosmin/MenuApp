@@ -20,8 +20,8 @@ function TablesPage () {
     const mergeOrderItems = (allItems: OrderItem[]): OrderItem[] => {
         const merged: OrderItem[] = [];
 
-        for (var ordItem of allItems) {
-            var existingItem = merged.find((oi) => equalItems(oi.item, ordItem.item));
+        for (let ordItem of allItems) {
+            let existingItem = merged.find((oi) => equalItems(oi.item, ordItem.item));
 
             if (existingItem) {
                 existingItem.quantity += ordItem.quantity;
@@ -40,38 +40,46 @@ function TablesPage () {
         setBookesTables(data);
     }
 
-    const fetchTableOrders = async (tableIndex: number | null) => {
-        if (!tableIndex) return;
-
-        const res = await fetch(`${BASE_URL}/api/tables/${tableIndex}`);
-        const data = await res.json();
-        
-        const allItems: OrderItem[] = data.flatMap((order: Order) => 
-            order.items.map((ordItem: OrderItem) => ({item: ordItem.item, quantity: ordItem.quantity})));
-
-        const mergedItems = mergeOrderItems(allItems);
-
-        setOrder(mergedItems);
-    }
-
     useEffect(() => {
+        const fetchTableOrders = async (tableIndex: number | null) => {
+            if (!tableIndex) return;
+
+            const res = await fetch(`${BASE_URL}/api/tables/${tableIndex}`);
+            const data = await res.json();
+            
+            const allItems: OrderItem[] = data.flatMap((order: Order) => 
+                order.items.map((ordItem: OrderItem) => ({item: ordItem.item, quantity: ordItem.quantity})));
+
+            const mergedItems = mergeOrderItems(allItems);
+
+            setOrder(mergedItems);
+        }
+
         fetchBookedTables();
-        
-        socket.on("orderConfirmed", ({updatedOrder, indexes}) => {
-            setOrder((prev) => {
-                const allItems = prev ? [...prev, ...updatedOrder.items] : [...updatedOrder.items];
-                const mergedItems = mergeOrderItems(allItems);
-                return mergedItems;
-            });
+
+        if (tableID !== null) {
+            fetchTableOrders(tableID);
+        } else {
+            setOrder([]);
+        }
+
+        const handleOrderConfirmed = ({updatedOrder, indexes} : {updatedOrder: Order, indexes: number[]}) => {
             setBookesTables(indexes);
-        });
+            if (updatedOrder.tableID === tableID) {
+                setOrder((prev) => {
+                    const allItems = prev ? [...prev, ...updatedOrder.items] : [...updatedOrder.items];
+                    const mergedItems = mergeOrderItems(allItems);
+                    return mergedItems;
+                });
+            }
+        };
+
+        socket.on("orderConfirmed", handleOrderConfirmed);
 
         return () => {
-            socket.off("orderConfirmed");
+            socket.off("orderConfirmed", handleOrderConfirmed);
         };
-    }, []);
-
-    useEffect(() => {fetchTableOrders(tableID);}, [tableID])
+    }, [tableID]);
 
     return (
         <div className="tables-page">
