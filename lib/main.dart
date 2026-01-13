@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       navigatorObservers: [routeObserver],
-      home: const QrPage(),
+      home: const HomePage(), // Changed to skip QR reading
     );
   }
 }
@@ -73,6 +73,7 @@ class HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
+    context.read<TableProvider>().setTableID(16); // Added to skip QR reading
 
     mainOptionsAnimationController = AnimationController(
       vsync: this,

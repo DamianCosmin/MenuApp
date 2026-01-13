@@ -1,14 +1,16 @@
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
-const data = [
-  { name: "Occupation Rate", value: 65 },
-  { name: "Remaining", value: 35 },
-];
+type OccupationPieProps = {
+  rate: number
+}
 
 const COLORS = ["#ffa600", "#333"];
 
-export default function HalfPieChart() {
-  const percentage = data[0].value;
+export default function HalfPieChart({rate}: OccupationPieProps) {
+  let data = [
+    { name: "Occupation Rate", value: rate },
+    { name: "Remaining", value: 100 - rate },
+  ];
 
   return (
     <div style={{ position: "relative", width: "100%", height: 120 }}>
@@ -16,13 +18,12 @@ export default function HalfPieChart() {
         <PieChart>
           <Pie
             data={data}
-            cx="50%"         // center X
+            cx="50%"        // center X
             cy="100%"        // push center down so only half is visible
             startAngle={180} // start from left
             endAngle={0}     // end at right
             innerRadius={60} // makes it a donut
             outerRadius={100}
-            // paddingAngle={0}
             dataKey="value"
           >
             {data.map((_, index) => (
@@ -44,7 +45,7 @@ export default function HalfPieChart() {
             pointerEvents: "none",
           }}
         >
-          {percentage}%
+          {rate}%
         </div>
     </div>
   );

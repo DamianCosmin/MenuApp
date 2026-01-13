@@ -29,7 +29,7 @@ class SocketService {
 
   void joinOrderRoom(int orderId) {
     socket.emit('joinOrderRoom', orderId);
-    print('🛎️ Joined room for order $orderId');
+    print('Joined room for order $orderId');
   }
 
   void dispose() {

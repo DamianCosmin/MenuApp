@@ -8,7 +8,7 @@ export interface Item {
 }
 
 export function equalItems(a: Item, b: Item) {
-  return a.categoryID == b.categoryID && a.itemID == b.itemID;
+  return a.categoryID === b.categoryID && a.itemID === b.itemID;
 }
 
 export interface OrderItem {
@@ -25,6 +25,14 @@ export interface Order {
 }
 
 export interface TableItem {
-    id: number;
-    order: OrderItem[] | null;
+  id: number;
+  order: OrderItem[] | null;
+}
+
+export interface AnalyticsData {
+  totalOrders: number;
+  totalRevenue: number;
+  totalItems: number;
+  occupation: number;
+  bestSellers: string[];
 }

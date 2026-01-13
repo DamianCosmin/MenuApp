@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { v4 as uuidv4 } from "uuid";
+import { ANALYTICS, sendCustomAnalytics, updateAnalytics } from "./analytics.js";
 
 const app = express();
 const PORT = 5050;
@@ -15,6 +15,7 @@ const io = new Server(httpServer, {
 let ORDERS: any[] = [];
 let ORDERS_ID: number = 1;
 let BOOKED_TABLES: number[] = [];
+const NR_TABLES = 23;
 
 io.on("connection", (socket) => {
   socket.on("joinOrderRoom", (orderId) => {
@@ -59,10 +60,12 @@ app.put("/api/orders/:id", (req, res) => {
 
   if (newStatus === 'Confirmed') {
     order.status = newStatus;
-
+  
     if (!BOOKED_TABLES.includes(order.tableID)) {
       BOOKED_TABLES.push(order.tableID);
     }
+
+    updateAnalytics(order, BOOKED_TABLES.length, NR_TABLES);
 
     io.emit("orderConfirmed", {updatedOrder: order, indexes: BOOKED_TABLES});
     io.to(order.id.toString()).emit("adminConfirmed");
@@ -98,7 +101,27 @@ app.get("/api/tables/:tblId", (req, res) => {
   res.json(orders);
 });
 
+app.get("/api/analytics", (req, res) => {
+  let customAnalyticsData = sendCustomAnalytics(["ALL"]);
+  res.json(customAnalyticsData);
+
+  // let analyticsData = {
+  //   totalOrders: ANALYTICS.NR_CONFIRMED_ORDERS,
+  //   totalRevenue: ANALYTICS.TOTAL_DAILY_REVENUE,
+  //   totalItems: ANALYTICS.NR_ITEMS_IN_ORDERS,
+  //   occupation: ((BOOKED_TABLES.length / NR_TABLES) * 100).toFixed(2)
+  // }
+  // res.json(analyticsData);
+});
+
+app.get("/api/analytics/:fields", (req, res) => {
+  const fields: string[] = req.params.fields.split(",");
+
+  let customAnalyticsData = sendCustomAnalytics(fields);
+  res.json(customAnalyticsData);
+});
+
 // Start server
 httpServer.listen(PORT, () => {
-  console.log(`💡 Backend running at http://localhost:${PORT}`);
+  console.log(`Backend running at http://localhost:${PORT}`);
 });
