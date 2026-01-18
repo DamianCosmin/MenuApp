@@ -1,42 +1,5 @@
-import { Order, OrderItem, AnalyticsData } from "../../frontend/src/utils/types.js";
-
-export let ANALYTICS = {
-    NR_CONFIRMED_ORDERS: 0,
-    NR_ITEMS_IN_ORDERS: 0,
-    TOTAL_DAILY_REVENUE: 0,
-    OCCUPATION_RATE: 0
-}
-
-export let totalItems: Map<number, OrderItem>[] = Array.from({length: 7}, () => new Map());
-// array index = category ID 
-// map key = itemID
-// map value = OrderItem
-
-export function updateAnalytics(order: Order, bookedTables: number, totalTables: number) {
-    ANALYTICS.NR_CONFIRMED_ORDERS++;
-    for (let ordItem of order.items) {
-        ANALYTICS.NR_ITEMS_IN_ORDERS += ordItem.quantity;
-    
-        let categoryID = ordItem.item.categoryID;
-        let {item, quantity} = ordItem;
-        
-        const categoryMap = totalItems[categoryID];
-        if (categoryMap) {
-            let key = item.itemID;
-            let existingItems = categoryMap.get(key);
-            if (existingItems) {
-                existingItems.quantity += quantity;
-            } else {
-                categoryMap.set(key, { ...ordItem });
-            }
-        } else {
-            console.log("Invalid category");
-        }
-    }
-    ANALYTICS.TOTAL_DAILY_REVENUE += order.total;
-    let occupation = (bookedTables / totalTables) * 100;
-    ANALYTICS.OCCUPATION_RATE = Math.round(occupation * 100) / 100;
-}
+import { OrderItem, AnalyticsData } from "../../frontend/src/utils/types.js";
+import * as Database from "./database_provider.js";
 
 const categoryIdMap: Record<string, number> = {
     burgers: 0,
@@ -48,7 +11,7 @@ const categoryIdMap: Record<string, number> = {
     desserts: 6
 }
 
-export function sendCustomAnalytics(categoryList: string[]) : AnalyticsData {
+export async function sendCustomAnalytics(categoryList: string[]) : Promise<AnalyticsData> {
     let lowerCategorylist;
     let allowedCategoryIds;
     
@@ -67,19 +30,26 @@ export function sendCustomAnalytics(categoryList: string[]) : AnalyticsData {
     let itemsCount = 0;
     let mergedItems: OrderItem[] = [];
 
+    let dbPromises = [];
     for (let i = 0; i < 7; i++) {
         if (allowedCategoryIds.includes(i)) {
-            const cMap = totalItems[i];
+            dbPromises.push(Database.getCategoryOrderItems(i));
+        }
+    }
 
-            if (!cMap) {
-                continue;
-            }
+    const results = await Promise.all(dbPromises);
 
-            for (let ordItem of cMap.values()) {
-                mergedItems.push(ordItem);
-                itemsCount += ordItem.quantity;
-                itemsRevenue += (ordItem.item.itemPrice * ordItem.quantity);
-            }
+    for (let categoryItems of results) {
+        if (categoryItems == null) {
+            continue;
+        }
+
+        for (let dbEntry of categoryItems) {
+            const {_id, __v, ...ordItem} = dbEntry.toObject();
+
+            mergedItems.push(ordItem);
+            itemsCount += ordItem.quantity;
+            itemsRevenue += (ordItem.item.itemPrice * ordItem.quantity);
         }
     }
 
@@ -90,11 +60,13 @@ export function sendCustomAnalytics(categoryList: string[]) : AnalyticsData {
         bestSellers.push("N/A");
     }
 
+    const analytics = await Database.getAnalytics();
+
     return {
-        totalOrders: ANALYTICS.NR_CONFIRMED_ORDERS,
+        totalOrders: analytics?.totalOrders || 0,
         totalRevenue: itemsRevenue,
         totalItems: itemsCount,
-        occupation: ANALYTICS.OCCUPATION_RATE,
+        occupation: analytics?.occupationRate || 0,
         bestSellers: bestSellers
     };
 }

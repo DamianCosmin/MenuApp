@@ -68,7 +68,7 @@ class OrderProvider extends ChangeNotifier {
           body: jsonEncode({
             "tableID": table,
             "items": itemsList,
-            "total": total,
+            "total": double.parse(total.toStringAsFixed(2)),
           }),
         );
 

@@ -1,22 +1,37 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { ANALYTICS, sendCustomAnalytics, updateAnalytics } from "./analytics.js";
+
+import * as Database from "./database_provider.js";
+import { sendCustomAnalytics } from "./analytics.js";
+
+// Configuration
+dotenv.config();
 
 const app = express();
-const PORT = 5050;
+const PORT = process.env.PORT || 5050;
+const API_URL = process.env.API_URL || "http://127.0.0.1/api";
+
+// Middleware
+app.use(cors());
+app.use(express.json());
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  cors: { origin: "*" },
+  cors: { origin: "*" },  
 });
 
-let ORDERS: any[] = [];
-let ORDERS_ID: number = 1;
-let BOOKED_TABLES: number[] = [];
-const NR_TABLES = 23;
+// Database
+try {
+  await Database.connectToMongoDB();
+} catch (e) {
+  console.error(e);
+}
+await Database.helperClearDatabases(); // temporary
 
+// Websockets
 io.on("connection", (socket) => {
   socket.on("joinOrderRoom", (orderId) => {
     socket.join(orderId.toString());
@@ -24,102 +39,93 @@ io.on("connection", (socket) => {
   });
 });
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+let BOOKED_TABLES: number[] = [];
+const NR_TABLES = 23;
 
 // Routes
-app.post("/api/new_order", (req, res) => {
-  let newOrder = {
-    id: ORDERS_ID,
-    status: "Pending",
-    ...req.body
-  }
-
-  ORDERS.push(newOrder);
-  ORDERS_ID++;
-
+app.post("/api/new_order", async (req, res) => {
+  const newOrder = await Database.addPendingOrder(req.body);
   io.emit("newOrder", newOrder);
 
   console.log("New order received:", newOrder);
-  res.status(201).json({ order: newOrder });
+  return res.status(201).json({ message: "New order received", order: newOrder });
 });
 
-app.get("/api/orders", (_, res) => {
-  res.json(ORDERS);
+
+app.get("/api/orders", async (_, res) => {
+  const allOrders = await Database.getAllOrders();
+  return res.json(allOrders);
 });
 
-app.put("/api/orders/:id", (req, res) => {
+
+app.put("/api/orders/:id", async (req, res) => {
   const orderID = parseInt(req.params.id);
-  const {newStatus} = req.body;
-
-  const order = ORDERS.find(o => o.id === orderID);
-  if (!order) {
-    return res.status(404).json({ message: "Order to be confirmed not found" });
-  }
+  const { newStatus } = req.body;
 
   if (newStatus === 'Confirmed') {
-    order.status = newStatus;
-  
-    if (!BOOKED_TABLES.includes(order.tableID)) {
-      BOOKED_TABLES.push(order.tableID);
+    const result = await Database.addOrderToDB(orderID);
+
+    if (!result) {
+      return res.status(404).json({ message: "Order to be confirmed not found" });
     }
 
-    updateAnalytics(order, BOOKED_TABLES.length, NR_TABLES);
+    const { confirmedOrder, roomNumber } = result;
+  
+    if (!BOOKED_TABLES.includes(confirmedOrder.tableID)) {
+      BOOKED_TABLES.push(confirmedOrder.tableID);
+    }
 
-    io.emit("orderConfirmed", {updatedOrder: order, indexes: BOOKED_TABLES});
-    io.to(order.id.toString()).emit("adminConfirmed");
+    await Database.updateAnalytics(confirmedOrder, BOOKED_TABLES.length, NR_TABLES);
+
+    io.emit("orderConfirmed", {updatedOrder: confirmedOrder, pendingId: roomNumber, indexes: BOOKED_TABLES});
+    io.to(roomNumber.toString()).emit("adminConfirmed");
+
+    return res.json({ message: "Order updated", confirmedOrder });
   }
-
-  res.json({ message: "Order updated", order });
 });
 
-app.delete("/api/orders/:id", (req, res) => {
+
+app.delete("/api/orders/:id", async (req, res) => {
   const orderID = parseInt(req.params.id);
 
-  const index = ORDERS.findIndex(o => o.id === orderID);
-  if (index === -1) {
+  const deletedOrder = await Database.deletePendingOrder(orderID);
+  if (!deletedOrder) {
     return res.status(404).json({ message: "Order to be deleted not found" });
   }
 
-  const deletedOrder = ORDERS.splice(index, 1)[0] // because it's an array of deleted items
   io.emit("orderDeleted", deletedOrder);
   io.to(deletedOrder.id.toString()).emit("adminDeclined");
 
-  res.json({ message: "Order deleted", order: deletedOrder });
+  return res.json({ message: "Order deleted", order: deletedOrder });
 });
+
 
 app.get("/api/tables/indexes", (_, res) => {
   res.json(BOOKED_TABLES);
 })
 
-app.get("/api/tables/:tblId", (req, res) => {
+
+app.get("/api/tables/:tblId", async (req, res) => {
   const givenTable = parseInt(req.params.tblId);
 
-  const orders = ORDERS.filter(o => o.tableID === givenTable && o.status === 'Confirmed');
-
-  res.json(orders);
+  const tableOrders = await Database.getTableOrders(givenTable);
+  res.json(tableOrders);
 });
 
-app.get("/api/analytics", (req, res) => {
-  let customAnalyticsData = sendCustomAnalytics(["ALL"]);
+
+app.get("/api/analytics", async (_, res) => {
+  let customAnalyticsData = await sendCustomAnalytics(["ALL"]);
   res.json(customAnalyticsData);
-
-  // let analyticsData = {
-  //   totalOrders: ANALYTICS.NR_CONFIRMED_ORDERS,
-  //   totalRevenue: ANALYTICS.TOTAL_DAILY_REVENUE,
-  //   totalItems: ANALYTICS.NR_ITEMS_IN_ORDERS,
-  //   occupation: ((BOOKED_TABLES.length / NR_TABLES) * 100).toFixed(2)
-  // }
-  // res.json(analyticsData);
 });
 
-app.get("/api/analytics/:fields", (req, res) => {
+
+app.get("/api/analytics/:fields", async (req, res) => {
   const fields: string[] = req.params.fields.split(",");
 
-  let customAnalyticsData = sendCustomAnalytics(fields);
+  let customAnalyticsData = await sendCustomAnalytics(fields);
   res.json(customAnalyticsData);
 });
+
 
 // Start server
 httpServer.listen(PORT, () => {

@@ -22,8 +22,10 @@ export interface Order {
   tableID: number;
   items: OrderItem[];
   total: number;
+  createdAt?: Date; 
 }
 
+// Might delete?
 export interface TableItem {
   id: number;
   order: OrderItem[] | null;

@@ -24,10 +24,8 @@ function OrdersPage() {
             setOrders(prev => prev ? [...prev, order] : [order]);
         });
 
-        socket.on("orderConfirmed", ({updatedOrder, _}) => {
-            setOrders(prev =>
-            prev ? prev.map(o => (o.id === updatedOrder.id ? updatedOrder : o)) : []
-            );
+        socket.on("orderConfirmed", ({updatedOrder, pendingId, _}) => {
+            setOrders(prev => prev ? prev.map(o => (o.id === pendingId ? updatedOrder : o)) : []);
         });
 
         socket.on("orderDeleted", (deletedOrder) => {

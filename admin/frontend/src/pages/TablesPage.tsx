@@ -63,7 +63,7 @@ function TablesPage () {
             setOrder([]);
         }
 
-        const handleOrderConfirmed = ({updatedOrder, indexes} : {updatedOrder: Order, indexes: number[]}) => {
+        const handleOrderConfirmed = ({updatedOrder, pendingId, indexes} : {updatedOrder: Order, pendingId: number, indexes: number[]}) => {
             setBookesTables(indexes);
             if (updatedOrder.tableID === tableID) {
                 setOrder((prev) => {
