@@ -16,6 +16,9 @@ The app comes with a web-based admin panel built from scratch that offers multip
 ### 🎨 Smooth animations
 Designed to offer a polished experience and instant visual feedback on users' order status by adding animations based on kitchen updates.
 
+### 💾 Scalable data storage
+Utilizing MongoDB, the system provides a flexible and robust data foundation. It manages everything from nested order details to long-term analytics, ensuring real-time synchronization and smooth performance.
+
 ## Screenshots
 
 ### 📱 Mobile app
@@ -27,16 +30,16 @@ Designed to offer a polished experience and instant visual feedback on users' or
 <img src="assets/images/admin_screenshot2.png">
 
 ## Tech stack
-- **App**: Flutter and other Flutter packages
+- **App**: Flutter & other Flutter packages
 - **Admin panel**: React, Bootstrap, Node.js
-- **Backend**: Node.js, Express
+- **Backend**: Node.js, Express, MongoDB
 - **Other**: REST API, Websockets
 
 ## Roadmap
 - ✅ Ordering system
 - ✅ QR code integration
 - ✅ Order tracking on admin panel
-- 🔜 Integration with a scalable & reliable database
+- ✅ Integration with a scalable & reliable database
 - 🔜 Secure login system for admins
 - 🔜 Analytics dashboard on the panel
 - 🔜 In-app payment functionalities
