@@ -1,8 +1,7 @@
 import { Schema, model } from "mongoose";
-import { Order } from "../../../frontend/src/utils/types.js";
 import { orderItemSchema } from "./OrderItemModel.js";
 
-export const orderSchema = new Schema<Order>({
+export const orderSchema = new Schema({
     id: {
         type: Number,
         required: true,
@@ -26,10 +25,13 @@ export const orderSchema = new Schema<Order>({
     createdAt: {
         type: Date,
         default: Date.now,
+    },
+    expiresAt: {
+        type: Date,
         index: true,
-        expires: 604800, // 604800 seconds = 7 days
+        expires: 0,
     }
 });
 
-export const OrderModel = model<Order>('Order', orderSchema, 'orders');
-export const PendingOrderModel = model<Order>('PendingOrder', orderSchema, 'pending');
+export const OrderModel = model('Order', orderSchema, 'orders');
+export const PendingOrderModel = model('PendingOrder', orderSchema, 'pending');

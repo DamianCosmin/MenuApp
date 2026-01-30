@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { getTodayStart } from "../database_provider.js";
 
 const analyticsSchema = new Schema({
     totalOrders: {
@@ -23,8 +24,9 @@ const analyticsSchema = new Schema({
     },
     createdAt: {
         type: Date,
+        default: getTodayStart,
         index: true,
-        expires: 604800,
+        expires: 604800, // 604800 seconds = 7 days
     }
 });
 

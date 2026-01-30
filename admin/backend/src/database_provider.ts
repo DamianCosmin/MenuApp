@@ -5,10 +5,16 @@ import { OrderItemAnalyticsModel } from "./models/OrderItemModel.js";
 import { AnalyticsModel } from "./models/AnalyticsModel.js";
 import { Order } from "../../frontend/src/utils/types.js";
 
-function getTodayStart() {
+export function getTodayStart() {
     const midnight = new Date();
     midnight.setUTCHours(0, 0, 0, 0);
     return midnight;
+}
+
+function getNextDayStart() {
+    const nextMidnight = new Date();
+    nextMidnight.setUTCHours(24, 0, 0, 0);
+    return nextMidnight;
 }
 
 export async function connectToMongoDB() {
@@ -40,7 +46,9 @@ export async function addPendingOrder(body: any) {
         const newOrder: Order = {
             id: pendingID.seq,
             status: "Pending",
-            ...body
+            ...body,
+            createdAt: new Date(),
+            expiresAt: getNextDayStart()
         }
 
         await PendingOrderModel.create(newOrder);
@@ -85,7 +93,8 @@ export async function addOrderToDB(orderID: number) {
             
             const previousID = orderData.id;
             orderData.id = confirmedID.seq;
-            orderData.createdAt = getTodayStart(); // change here with relative time
+            orderData.createdAt = new Date();
+            orderData.expiresAt = getNextDayStart();
 
             const confirmedOrder = await OrderModel.create(orderData);
             return { confirmedOrder, roomNumber: previousID };
@@ -169,7 +178,7 @@ export async function updateAnalytics(order: Order, bookedTables: number, totalT
     }
 }
 
-export async function getAnalytics() {
+export async function getTodayAnalytics() {
     try {
         const todayStart = getTodayStart();
         const result = await AnalyticsModel.findOne({ createdAt: {$gte: todayStart} });
@@ -185,7 +194,6 @@ export async function getAnalytics() {
     }
 }
 
-// TO-DO: this collection should reset at the start of each day or add TTL for expiration time
 export async function getCategoryOrderItems(category: number) {
     if (category == null) {
         return null;

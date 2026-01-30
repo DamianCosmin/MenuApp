@@ -60,7 +60,7 @@ export async function sendCustomAnalytics(categoryList: string[]) : Promise<Anal
         bestSellers.push("N/A");
     }
 
-    const analytics = await Database.getAnalytics();
+    const analytics = await Database.getTodayAnalytics();
 
     return {
         totalOrders: analytics?.totalOrders || 0,

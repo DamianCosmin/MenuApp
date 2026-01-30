@@ -29,7 +29,7 @@ try {
 } catch (e) {
   console.error(e);
 }
-await Database.helperClearDatabases(); // temporary
+// await Database.helperClearDatabases(); // temporary
 
 // Websockets
 io.on("connection", (socket) => {

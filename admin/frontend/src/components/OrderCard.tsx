@@ -37,6 +37,8 @@ function OrderCard({order}: OrderProps) {
         }
     };
 
+    const finishOrder = () => {};
+
     return (
         <div key={order.id} className="bg-secondary bg-opacity-25 text-light w-100 rounded p-3 mb-4">
             <div className="d-flex justify-content-between align-items-center">
@@ -59,6 +61,12 @@ function OrderCard({order}: OrderProps) {
                 <div className="mt-3 d-flex flex-wrap justify-content-center gap-2 gap-md-4">
                     <button className="btn btn-lg btn-success rounded-pill px-3" type="button" onClick={confirmOrder} onMouseUp={(e) => e.currentTarget.blur()}>CONFIRM</button>
                     <button className="btn btn-lg btn-danger rounded-pill px-3" type="button" onClick={deleteOrder} onMouseUp={(e) => e.currentTarget.blur()}>DECLINE</button>
+                </div>
+            }
+
+            {order.status === 'Confirmed' && 
+                <div className="mt-3 d-flex flex-wrap justify-content-center gap-2 gap-md-4">
+                    <button className="btn btn-lg btn-warning rounded-pill px-5" type="button" onClick={finishOrder} onMouseUp={(e) => e.currentTarget.blur()}>FINISH</button>
                 </div>
             }
         </div>
