@@ -21,11 +21,19 @@ function OrdersPage() {
         fetchOrders();
 
         socket.on("newOrder", (order) => {
-            setOrders(prev => prev ? [...prev, order] : [order]);
+            setOrders(prev => prev ? [order, ...prev] : [order]);
         });
 
         socket.on("orderConfirmed", ({updatedOrder, pendingId, _}) => {
-            setOrders(prev => prev ? prev.map(o => (o.id === pendingId ? updatedOrder : o)) : []);
+            setOrders(prev => {
+                if (!prev) {
+                    return [];
+                }
+
+                const otherOrders = prev.filter(o => o.id !== pendingId);
+
+                return [...otherOrders, updatedOrder];
+            });
         });
 
         socket.on("orderDeleted", (deletedOrder) => {
@@ -49,7 +57,7 @@ function OrdersPage() {
                 
                 { orders === null ? null : orders.length === 0 ? 
                     (<p>No orders yet</p>) : 
-                    (orders.map((ord) => <OrderCard key={ord.id} order={ord}/>))
+                    (orders.map((ord) => <OrderCard key={`${ord.id}-${ord.status}`} order={ord}/>))
                 }
             </div>
         </div>

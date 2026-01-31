@@ -17,6 +17,18 @@ function getNextDayStart() {
     return nextMidnight;
 }
 
+function getCurrentMonday() {
+    const today = new Date();
+    const day = today.getDay();
+    const diff = day === 0 ? 6 : day - 1;
+    
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - diff);
+    monday.setUTCHours(0, 0, 0, 0);
+
+    return monday;
+}
+
 export async function connectToMongoDB() {
     const mongodbUrl = process.env.MONGODB_URL;
     if (mongodbUrl == null) {
@@ -204,6 +216,28 @@ export async function getCategoryOrderItems(category: number) {
         return categoryItems;
     } catch (error) {
         console.error(`Error in getting orders from category ${category}: `, error);
+        return null;
+    }
+}
+
+export async function getGraphsData() {
+    const monday = getCurrentMonday();
+
+    try {
+        const result = await AnalyticsModel.find({ "createdAt": {$gte: monday} });
+
+        if (result) {
+            const graphsData = [];
+            for (let entry of result) {
+                const {_id, __v, ...fields} = entry.toObject();
+                graphsData.push(fields);
+            }
+            return graphsData;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error in getting the graphs data: ", error);
         return null;
     }
 }

@@ -2,19 +2,28 @@ import OrdersGraph from '../components/OrdersGraph.tsx'
 import RevenueGraph from '../components/RevenueGraph.tsx';
 import OccupationPie from '../components/OccupationPie.tsx';
 import { useEffect, useState } from 'react';
+import { BiSolidMedal } from 'react-icons/bi';
+import { PiMedalDuotone } from 'react-icons/pi';
 import { BASE_URL } from '../utils/routes.ts';
-import { AnalyticsData } from '../utils/types.ts';
+import { AnalyticsData, OrdersGraphData, RevenueGraphData } from '../utils/types.ts';
 
 const primaryButtons = ["ALL", "MAINS", "DRINKS"];
 const secondaryButtons = ["BURGERS", "PIZZA", "PASTA", "COFFEE", "SOFTDRINKS", "WINES", "DESSERTS"];
 
 const invalidBestSellers = ["N/A", "N/A", "N/A"];
 
+const dayDictionary = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+
+const medalColors = ["#FFD700", "#C0C0C0", "#CD7F32"];
+
 function AnalyticsPage() {
     const [data, setData] = useState<AnalyticsData | null>(null);
 
     const [primary, setPrimary] = useState<"ALL" | "MAINS" | "DRINKS" | null>("ALL");
     const [secondary, setSecondary] = useState<string[]>([]);
+
+    const [ordersGraphData, setOrdersGraphData] = useState<OrdersGraphData[]>([]);
+    const [revenueGraphData, setRevenueGraphData] = useState<RevenueGraphData[]>([]);
 
     const [loading, setLoading] = useState(false);
 
@@ -58,6 +67,29 @@ function AnalyticsPage() {
         setData(customAnalytics);
     };
 
+    const fetchGraphsData = async () => {
+        const res = await fetch(`${BASE_URL}/api/analytics/graphs`);
+        const data = await res.json();
+
+        console.log(data);
+
+        const weeklyOrders = dayDictionary.map(dayName => ({ name: dayName, orders: 0 }));
+        const weeklyRevenue = dayDictionary.map(dayName => ({ name: dayName, revenue: 0 }));
+
+        for (let entry of data) {
+            const createdAt = new Date(entry.createdAt);
+            
+            const entryDay = createdAt.getDay();
+            const day = entryDay === 0 ? 6 : entryDay - 1;
+            
+            weeklyOrders[day].orders = entry.totalOrders;
+            weeklyRevenue[day].revenue = Number(entry.totalRevenue.toFixed(2));
+        }
+
+        setOrdersGraphData(weeklyOrders);
+        setRevenueGraphData(weeklyRevenue);
+    }
+
     useEffect(() => {
         let isMounted = true;
 
@@ -86,6 +118,7 @@ function AnalyticsPage() {
         }
 
         fetchData();
+        fetchGraphsData();
         return () => {
             isMounted = false;
         }
@@ -160,13 +193,17 @@ function AnalyticsPage() {
                         <div className="col-11 mx-auto col-md-8">
                             <div className="p-3 bg-dark rounded shadow-sm analytics-item">
                                 <p className="fs-5 fw-normal">Top 3 sellers</p>
+
                                 {data?.bestSellers ? data.bestSellers.map((name, index) => (
-                                    <p key={index} className="fs-4 fw-bold mb-1">
-                                    {index + 1}. {name}
-                                    </p>
+                                    <div key={index} className='d-flex flex-row align-items-center'>
+                                        <BiSolidMedal size={24} color={medalColors[index]}/>
+                                        <p className="fs-4 fw-bold mb-1 ms-2">
+                                            {name}
+                                        </p>
+                                    </div>
                                 )) : invalidBestSellers.map((name, index) => (
                                     <p key={index} className="fs-4 fw-bold mb-1">
-                                    {index + 1}. {name}
+                                        {index + 1}. {name}
                                     </p>
                                 ))}
                             </div>
@@ -181,14 +218,14 @@ function AnalyticsPage() {
                         <div className="col-11 mx-auto col-md">
                             <div className="p-3 bg-dark rounded shadow-sm analytics-item">
                                 <p className="fs-5 fw-normal">Weekly orders</p>
-                                <OrdersGraph />
+                                <OrdersGraph data={ordersGraphData} />
                             </div>
                         </div>
 
                         <div className="col-11 mx-auto col-md">
                             <div className="p-3 bg-dark rounded shadow-sm analytics-item">
                                 <p className="fs-5 fw-normal">Weekly revenue</p>
-                                <RevenueGraph />
+                                <RevenueGraph data={revenueGraphData} />
                             </div>
                         </div>
                     </div>

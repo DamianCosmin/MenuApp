@@ -7,18 +7,18 @@ import TablesPage from './pages/TablesPage.tsx';
 import AnalyticsPage from './pages/AnalyticsPage.tsx';
 
 function App() {
-  return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<div>Home Page</div>} />
-        <Route path="/orders" element={<OrdersPage />} />
-        <Route path="/tables" element={<TablesPage />} />
-        <Route path="/analytics" element={<AnalyticsPage />} />
-        <Route path="/login" element={<LoginPage />} />
-      </Routes>
-    </Router>
-  );
+    return (
+        <Router>
+            <Navbar />
+            <Routes>
+                <Route path="/" element={<div>Home Page</div>} />
+                <Route path="/orders" element={<OrdersPage />} />
+                <Route path="/tables" element={<TablesPage />} />
+                <Route path="/analytics" element={<AnalyticsPage />} />
+                <Route path="/login" element={<LoginPage />} />
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;

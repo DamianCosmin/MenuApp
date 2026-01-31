@@ -1,35 +1,35 @@
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    ResponsiveContainer
 } from "recharts";
+import { RevenueGraphData } from "../utils/types";
 
-const data = [
-  { name: "MON", Revenue: 3000 },
-  { name: "TUE", Revenue: 2800 },
-  { name: "WED", Revenue: 3400 },
-  { name: "THU", Revenue: 2900 },
-  { name: "FRI", Revenue: 6500 },
-  { name: "SAT", Revenue: 7600 },
-  { name: "SUN", Revenue: 7000 }
-];
+type RevenueGraphProps = {
+    data: RevenueGraphData[];
+}
 
-export default function RevenueGraph() {
-  return (
-    <ResponsiveContainer width="100%" height={300}>
-      <LineChart data={data}>
-        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Line type="monotone" dataKey="Revenue" stroke="#ffa500" strokeWidth={2} />
-      </LineChart>
-    </ResponsiveContainer>
-  );
+export default function RevenueGraph({data}: RevenueGraphProps) {
+    return (
+        <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={data}>
+                <CartesianGrid stroke="#ccc" strokeDasharray="1 5" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip contentStyle={{
+                    backgroundColor: "#212529",
+                    borderRadius: "5px", 
+                    border: "1px solid #ffa500",
+                    color: "#fff"
+                }}/>
+                <Legend />
+                <Line type="monotone" dataKey="revenue" stroke="#ffa500" strokeWidth={2} />
+            </LineChart>
+        </ResponsiveContainer>
+    );
 }
