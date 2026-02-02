@@ -3,35 +3,32 @@
     "categoryID": 2,
     "itemID": 1,
     "itemName": "Spaghetti Carbonara",
-    "itemPrice": 27.50,
-    "description": "Creamy spaghetti with pancetta, eggs, Parmesan, and black pepper.",
-    "photoPath": "assets/images/pasta/template.png"
+    "itemPrice": 48.50,
+    "description": "An authentic Roman classic. We use the heat from the freshly cooked pasta to create a silky sauce of eggs and cheese, punctuated by crispy pancetta.\n\nIngredients: Artisan Spaghetti, Crispy Pancetta, Pecorino Romano, Fresh Egg Yolks, Cracked Black Pepper.\n\nAllergens: Gluten, Dairy, Eggs.",
+    "photoPath": "assets/images/pasta/spaghetti_carbonara.png"
   },
-
   {
     "categoryID": 2,
     "itemID": 2,
     "itemName": "Spaghetti Bolognese",
-    "itemPrice": 25.99,
-    "description": "Traditional meat sauce slow-cooked with tomatoes, herbs, and garlic.",
-    "photoPath": "assets/images/pasta/template.png"
+    "itemPrice": 47.00,
+    "description": "The ultimate comfort food. Our signature ragù is slow-simmered for six hours with a blend of premium meats and aromatic herbs.\n\nIngredients: Spaghetti, Ground Beef and Pork Blend, San Marzano Tomatoes, Mirepoix, Red Wine, Grated Parmesan.\n\nAllergens: Gluten, Dairy, Celery.",
+    "photoPath": "assets/images/pasta/spaghetti_bolognese.png"
   },
-  
   {
     "categoryID": 2,
     "itemID": 3,
     "itemName": "Spaghetti with Shrimps",
-    "itemPrice": 28.75,
-    "description": "Juicy shrimp tossed with garlic, olive oil, and a hint of chili in spaghetti.",
-    "photoPath": "assets/images/pasta/template.png"
+    "itemPrice": 58.50,
+    "description": "Light, vibrant, and coastal. Succulent tiger prawns sautéed in a garlic-infused white wine sauce with a gentle spark of chili.\n\nIngredients: Spaghetti, Wild-Caught Shrimp, Garlic, Extra Virgin Olive Oil, White Wine, Chili Flakes, Fresh Parsley.\n\nAllergens: Gluten, Shellfish, Sulphites.",
+    "photoPath": "assets/images/pasta/spaghetti_shrimps.png"
   },
-
   {
     "categoryID": 2,
     "itemID": 4,
     "itemName": "Lasagna",
-    "itemPrice": 29.50,
-    "description": "Layered pasta with rich meat ragu, creamy béchamel, and melted cheese.",
-    "photoPath": "assets/images/pasta/template.png"
+    "itemPrice": 52.00,
+    "description": "A labor of love. Hand-layered pasta sheets with rich meat ragù and a velvety béchamel sauce, baked until the cheese is golden and bubbling.\n\nIngredients: Fresh Egg Pasta, Beef Ragù, Béchamel Sauce, Mozzarella, Parmesan, Fresh Basil.\n\nAllergens: Gluten, Dairy, Eggs.",
+    "photoPath": "assets/images/pasta/lasagna.png"
   }
 ]

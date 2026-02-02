@@ -104,7 +104,7 @@ class HomePageState extends State<HomePage>
       'pizza.png',
       'pasta.png',
       'coffee.png',
-      'soft_drinks2.png',
+      'soft_drinks.png',
       'wines.png',
       'desserts.png',
     ];
@@ -174,7 +174,7 @@ class HomePageState extends State<HomePage>
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
-                  'assets/images/${categoriesImages[categoryIndex]}',
+                  'assets/images/homepage/${categoriesImages[categoryIndex]}',
                 ),
                 opacity: 0.5,
                 fit: BoxFit.cover,
@@ -212,7 +212,7 @@ class HomePageState extends State<HomePage>
                   background: Opacity(
                     opacity: 0.85,
                     child: Image(
-                      image: AssetImage('assets/images/restaurant2.png'),
+                      image: AssetImage('assets/images/homepage/restaurant2.png'),
                       fit: BoxFit.cover,
                     ),
                   ),

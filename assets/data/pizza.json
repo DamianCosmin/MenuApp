@@ -3,62 +3,56 @@
     "categoryID": 1,
     "itemID": 1,
     "itemName": "Pizza Capriciosa",
-    "itemPrice": 27.99,
-    "description": "A rich mix of ham, mushrooms, artichokes, and olives on a classic tomato base.",
-    "photoPath": "assets/images/pizza/template.png"
+    "itemPrice": 62.50,
+    "description": "The 'Whimsical' pizza. A sophisticated harmony of savory ham and earthy vegetables, offering a different flavor profile in every bite.\n\nIngredients: San Marzano Tomato Base, Mozzarella, Cooked Ham, Sliced Mushrooms, Artichoke Hearts, Black Olives, Extra Virgin Olive Oil.\n\nAllergens: Gluten, Dairy.",
+    "photoPath": "assets/images/pizza/pizza_capriciosa.png"
   },
-  
   {
     "categoryID": 1,
     "itemID": 2,
     "itemName": "Pizza Diavola",
-    "itemPrice": 25.50,
-    "description": "Spicy salami, chili flakes, and mozzarella for those who like it hot.",
-    "photoPath": "assets/images/pizza/template.png"
+    "itemPrice": 58.50,
+    "description": "True to its name, this 'Devilish' pizza brings the heat with premium spicy salami and a kick of crushed red pepper flakes.\n\nIngredients: Tomato Sauce, Mozzarella di Bufala, Spicy Ventricina Salami, Fresh Chili Peppers, Oregano.\n\nAllergens: Gluten, Dairy.",
+    "photoPath": "assets/images/pizza/pizza_diavola.png"
   },
-
   {
     "categoryID": 1,
     "itemID": 3,
     "itemName": "Pizza Pepperoni",
-    "itemPrice": 24.99,
-    "description": "Loaded with pepperoni slices and gooey cheese over a tangy tomato base.",
-    "photoPath": "assets/images/pizza/template.png"
+    "itemPrice": 56.50,
+    "description": "A crowd favorite. Crispy, curled pepperoni slices layered over a sea of melted mozzarella and our signature tangy tomato sauce.\n\nIngredients: Sourdough Crust, Tomato Sauce, Mozzarella, Premium Beef Pepperoni, Garlic Oil.\n\nAllergens: Gluten, Dairy.",
+    "photoPath": "assets/images/pizza/pizza_pepperoni.png"
   },
-
   {
     "categoryID": 1,
     "itemID": 4,
     "itemName": "Pizza Margherita",
-    "itemPrice": 21.00,
-    "description": "A simple and fresh classic with tomato sauce, mozzarella, and basil.",
-    "photoPath": "assets/images/pizza/template.png"
+    "itemPrice": 50.50,
+    "description": "The gold standard of Naples. Simplicity at its finest, featuring the colors of the Italian flag: red tomato, white mozzarella, and green basil.\n\nIngredients: San Marzano Tomatoes, Fresh Mozzarella, Fresh Basil Leaves, Sea Salt, Extra Virgin Olive Oil.\n\nAllergens: Gluten, Dairy.",
+    "photoPath": "assets/images/pizza/pizza_margherita.png"
   },
-
   {
     "categoryID": 1,
     "itemID": 5,
     "itemName": "Pizza Quattro Formaggi",
-    "itemPrice": 29.90,
-    "description": "A cheesy indulgence with mozzarella, gorgonzola, parmesan, and fontina.",
-    "photoPath": "assets/images/pizza/template.png"
+    "itemPrice": 67.50,
+    "description": "A velvety, rich masterpiece for cheese lovers. A complex blend of four distinct cheeses that melt together into a creamy delight.\n\nIngredients: Mozzarella, Gorgonzola Dolce, Shaved Parmesan, Fontina Cheese, Toasted Walnuts (optional).\n\nAllergens: Gluten, Dairy, Nuts.",
+    "photoPath": "assets/images/pizza/pizza_quattro_formaggi.png"
   },
-
   {
     "categoryID": 1,
     "itemID": 6,
     "itemName": "Pizza Quattro Stagioni",
-    "itemPrice": 28.75,
-    "description": "Four seasons on a plate: mushrooms, ham, artichokes, and olives in sections.",
-    "photoPath": "assets/images/pizza/template.png"
+    "itemPrice": 64.50,
+    "description": "Representing the Four Seasons. Each quadrant of the pizza offers a unique topping, traditionally divided to showcase varied seasonal flavors.\n\nIngredients: Tomato Base, Mozzarella, Mushrooms (Spring), Artichokes (Summer), Olives (Autumn), Prosciutto (Winter).\n\nAllergens: Gluten, Dairy.",
+    "photoPath": "assets/images/pizza/pizza_quattro_stagioni.png"
   },
-
   {
     "categoryID": 1,
     "itemID": 7,
     "itemName": "Pizza Chicken",
-    "itemPrice": 26.45,
-    "description": "Tender grilled chicken, onions, and mozzarella on a savory tomato base.",
-    "photoPath": "assets/images/pizza/template.png"
+    "itemPrice": 59.50,
+    "description": "A modern classic. Juicy grilled chicken strips paired with sweet red onions and a blanket of golden mozzarella.\n\nIngredients: Herb-Roasted Chicken, Red Onion, Bell Peppers, Mozzarella, Tomato Sauce, Fresh Parsley.\n\nAllergens: Gluten, Dairy.",
+    "photoPath": "assets/images/pizza/pizza_chicken.png"
   }
 ]

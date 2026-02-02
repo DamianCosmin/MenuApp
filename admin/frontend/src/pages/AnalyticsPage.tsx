@@ -3,7 +3,6 @@ import RevenueGraph from '../components/RevenueGraph.tsx';
 import OccupationPie from '../components/OccupationPie.tsx';
 import { useEffect, useState } from 'react';
 import { BiSolidMedal } from 'react-icons/bi';
-import { PiMedalDuotone } from 'react-icons/pi';
 import { BASE_URL } from '../utils/routes.ts';
 import { AnalyticsData, OrdersGraphData, RevenueGraphData } from '../utils/types.ts';
 

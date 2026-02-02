@@ -3,26 +3,32 @@
     "categoryID": 5,
     "itemID": 1,
     "itemName": "Red Wine",
-    "itemPrice": 45.00,
-    "description": "A bold and rich wine with notes of dark berries and oak.",
-    "photoPath": "assets/images/wines/template.png"
+    "itemPrice": 115.00,
+    "description": "A full-bodied Cabernet Sauvignon with deep structure. It opens with aromas of black cherry and cedar, followed by a velvety finish of toasted oak.\n\nBest paired with: Our signature Double Cheeseburger or the rich, slow-cooked Lasagna.",
+    "photoPath": "assets/images/wines/red_wine.png"
   },
-
   {
     "categoryID": 5,
     "itemID": 2,
     "itemName": "Rose Wine",
-    "itemPrice": 38.50,
-    "description": "A crisp and fruity pink wine with floral and berry notes.",
-    "photoPath": "assets/images/wines/template.png"
+    "itemPrice": 92.00,
+    "description": "A sophisticated Provence-style Rosé. This wine is delightfully crisp, offering a bouquet of wild strawberries and rose petals with a clean, mineral finish.\n\nBest paired with: The Pizza Margherita or our herb-marinated Chicken Burger.",
+    "photoPath": "assets/images/wines/rose_wine.png"
   },
-  
   {
     "categoryID": 5,
     "itemID": 3,
     "itemName": "White Wine",
-    "itemPrice": 42.00,
-    "description": "A light and refreshing wine with hints of citrus and green apple.",
-    "photoPath": "assets/images/wines/template.png"
+    "itemPrice": 105.00,
+    "description": "A vibrant Sauvignon Blanc with bright acidity. Expect a refreshing palate of zesty lime, green apple, and a hint of tropical passionfruit.\n\nBest paired with: Spaghetti with Shrimps or the vibrant flavors of the Vegan Burger.",
+    "photoPath": "assets/images/wines/white_wine.png"
+  },
+  {
+    "categoryID": 5,
+    "itemID": 4,
+    "itemName": "Champagne",
+    "itemPrice": 200.00,
+    "description": "The pinnacle of celebration. An exquisite Brut Champagne featuring fine bubbles and complex notes of toasted brioche, white flowers, and citrus zest.\n\nBest paired with: Profiterols for a decadent dessert experience or enjoyed as a refined aperitif.",
+    "photoPath": "assets/images/wines/champagne.png"
   }
 ]

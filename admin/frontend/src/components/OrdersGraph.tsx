@@ -8,7 +8,7 @@ import {
     Legend,
     ResponsiveContainer
 } from "recharts";
-import { OrdersGraphData } from "../utils/types";
+import { OrdersGraphData } from "../utils/types.ts";
 
 type OrdersGraphProps = {
     data: OrdersGraphData[];

@@ -4,79 +4,71 @@
     "itemID": 1,
     "itemName": "Coca-Cola",
     "itemPrice": 10.00,
-    "description": "Classic cola beverage with a refreshing, fizzy taste.",
-    "photoPath": "assets/images/drinks/template.png"
+    "description": "The legendary original. An ice-cold, fizzy classic that delivers that unmistakable refreshing kick with every sip.",
+    "photoPath": "assets/images/drinks/cola.png"
   },
-
   {
     "categoryID": 4,
     "itemID": 2,
     "itemName": "Pepsi",
     "itemPrice": 10.00,
-    "description": "Bold and sweet cola flavor with a smooth finish.",
-    "photoPath": "assets/images/drinks/template.png"
+    "description": "Smooth, bold, and unapologetically sweet. A refreshing cola experience with a crisp finish that hits the spot.",
+    "photoPath": "assets/images/drinks/pepsi.png"
   },
-
   {
     "categoryID": 4,
     "itemID": 3,
     "itemName": "Sprite",
-    "itemPrice": 9.50,
-    "description": "Crisp lemon-lime soda with a clean, refreshing taste.",
-    "photoPath": "assets/images/drinks/template.png"
+    "itemPrice": 10.00,
+    "description": "A burst of lemon-lime electricity. Perfectly clear, intensely fizzy, and designed to quench your thirst instantly.",
+    "photoPath": "assets/images/drinks/sprite.png"
   },
-
   {
     "categoryID": 4,
     "itemID": 4,
     "itemName": "Fanta",
-    "itemPrice": 9.50,
-    "description": "Fruity orange soda bursting with sweet citrus flavor.",
-    "photoPath": "assets/images/drinks/template.png"
+    "itemPrice": 10.00,
+    "description": "Bright, bubbly, and full of sunshine. A fruit-forward orange soda that brings a vibrant citrus pop to your meal.",
+    "photoPath": "assets/images/drinks/fanta.png"
   },
-
   {
     "categoryID": 4,
     "itemID": 5,
     "itemName": "Club Soda",
     "itemPrice": 8.00,
-    "description": "Carbonated water with a crisp, bubbly kick.",
-    "photoPath": "assets/images/drinks/template.png"
+    "description": "Purely effervescent. A crisp, neutral sparkler that cleanses the palate and keeps things light and bubbly.",
+    "photoPath": "assets/images/drinks/club_soda.png"
   },
-
   {
     "categoryID": 4,
     "itemID": 6,
     "itemName": "Tonic Water",
     "itemPrice": 8.50,
-    "description": "Slightly bitter carbonated drink with a hint of quinine.",
-    "photoPath": "assets/images/drinks/template.png"
+    "description": "Sophisticated and sharp. A bittersweet carbonated classic with a botanical edge for those who prefer a more complex fizz.",
+    "photoPath": "assets/images/drinks/tonic.png"
   },
-
   {
     "categoryID": 4,
     "itemID": 7,
     "itemName": "Water",
-    "itemPrice": 8.00,
-    "description": "Pure and refreshing still mineral water.",
-    "photoPath": "assets/images/drinks/template.png"
+    "itemPrice": 7.00,
+    "description": "Crystal clear and perfectly still. Premium mineral water served chilled to keep you hydrated and refreshed.",
+    "photoPath": "assets/images/drinks/water.png"
   },
-
   {
     "categoryID": 4,
     "itemID": 8,
     "itemName": "Sparkling Water",
-    "itemPrice": 9.00,
-    "description": "Effervescent mineral water with natural bubbles.",
-    "photoPath": "assets/images/drinks/template.png"
+    "itemPrice": 7.00,
+    "description": "Nature’s own fizz. Clean mineral water with fine, elegant bubbles for a more lively hydration experience.",
+    "photoPath": "assets/images/drinks/sparkling_water.png"
   },
-  
   {
     "categoryID": 4,
     "itemID": 9,
     "itemName": "Beer",
-    "itemPrice": 14.00,
-    "description": "Chilled and crisp, a classic golden lager.",
-    "photoPath": "assets/images/drinks/template.png"
+    "itemPrice": 12.00,
+    "description": "The ultimate cool-down. A crisp, golden lager served frost-nipped with a smooth, refreshing malt finish.",
+    "photoPath": "assets/images/drinks/beer.png"
   }
 ]

@@ -1,73 +1,66 @@
 [
   {
     "categoryID": 0,
-    "itemID": 0,
-    "itemName": "Classic Burger",
-    "itemPrice": 35.99,
-    "description": "A timeless classic with a juicy beef patty, lettuce, tomato, pickles, and house sauce.",
-    "photoPath": "assets/images/burgers/template.png"
-  },
-
-  {
-    "categoryID": 0,
     "itemID": 1,
-    "itemName": "Cheeseburger",
-    "itemPrice": 38.49,
-    "description": "Beef patty topped with melted cheddar cheese, lettuce, tomato, and ketchup.",
-    "photoPath": "assets/images/burgers/template.png"
+    "itemName": "Classic Burger",
+    "itemPrice": 42.90,
+    "description": "The ultimate backyard staple. A thick, flame-grilled beef patty served on a toasted brioche bun with crisp iceberg lettuce and vine-ripened tomatoes.\n\nIngredients: 100% Angus Beef, Brioche Bun, Lettuce, Tomato, Red Onion, Pickles, House Signature Sauce.\n\nAllergens: Gluten, Eggs, Mustard.",
+    "photoPath": "assets/images/burgers/classic_burger.png"
   },
-
   {
     "categoryID": 0,
     "itemID": 2,
-    "itemName": "Double Cheeseburger",
-    "itemPrice": 42.75,
-    "description": "Two beef patties stacked with double cheddar, onions, pickles, and mustard.",
-    "photoPath": "assets/images/burgers/template.png"
+    "itemName": "Cheeseburger",
+    "itemPrice": 46.90,
+    "description": "Simple perfection. We take our classic beef patty and blanket it in thick, melted sharp cheddar cheese for that iconic savory finish.\n\nIngredients: Angus Beef, Sharp Cheddar, Brioche Bun, Lettuce, Tomato, Tomato Ketchup.\n\nAllergens: Gluten, Dairy.",
+    "photoPath": "assets/images/burgers/cheeseburger.png"
   },
-
   {
     "categoryID": 0,
     "itemID": 3,
-    "itemName": "Triple Cheeseburger",
-    "itemPrice": 47.90,
-    "description": "Triple beef, triple cheese, with lettuce, tomato, onions, and our special sauce.",
-    "photoPath": "assets/images/burgers/template.png"
+    "itemName": "Double Cheeseburger",
+    "itemPrice": 58.90,
+    "description": "Twice the beef, twice the glory. This powerhouse features two hand-pressed patties and double layers of cheddar for a serious protein hit.\n\nIngredients: Two Angus Beef Patties, Double Cheddar Cheese, Diced Onions, Pickles, Yellow Mustard.\n\nAllergens: Gluten, Dairy, Mustard.",
+    "photoPath": "assets/images/burgers/double_cheeseburger.png"
   },
-
   {
     "categoryID": 0,
     "itemID": 4,
-    "itemName": "Bacon Burger",
-    "itemPrice": 39.99,
-    "description": "Smoky bacon strips over a juicy beef patty with cheddar, lettuce, and BBQ mayo.",
-    "photoPath": "assets/images/burgers/template.png"
+    "itemName": "Triple Cheeseburger",
+    "itemPrice": 72.90,
+    "description": "The heavy lifter. Three juicy beef patties stacked high with triple cheese and drizzled in our secret 'Boss' sauce for the ultimate indulgence.\n\nIngredients: Three Angus Beef Patties, Triple Cheddar, Special Boss Sauce, Lettuce, Tomato, Sautéed Onions.\n\nAllergens: Gluten, Dairy, Eggs, Mustard.",
+    "photoPath": "assets/images/burgers/triple_cheeseburger.png"
   },
-
   {
     "categoryID": 0,
     "itemID": 5,
-    "itemName": "Spicy Burger",
-    "itemPrice": 41.50,
-    "description": "Spicy beef patty with jalapeños, pepper jack cheese, lettuce, and chipotle sauce.",
-    "photoPath": "assets/images/burgers/template.png"
+    "itemName": "Bacon Burger",
+    "itemPrice": 54.90,
+    "description": "A smoky masterpiece. Topped with thick-cut applewood smoked bacon and a tangy BBQ mayo that perfectly complements the charred beef.\n\nIngredients: Angus Beef, Applewood Smoked Bacon, Aged Cheddar, BBQ Mayo, Crispy Onions.\n\nAllergens: Gluten, Dairy, Eggs.",
+    "photoPath": "assets/images/burgers/bacon_burger.png"
   },
-
   {
     "categoryID": 0,
     "itemID": 6,
-    "itemName": "Chicken Burger",
-    "itemPrice": 36.25,
-    "description": "Grilled chicken breast with lettuce, tomato, mayo, and melted Swiss cheese.",
-    "photoPath": "assets/images/burgers/template.png"
+    "itemName": "Spicy Burger",
+    "itemPrice": 52.90,
+    "description": "Turn up the heat! Infused with fiery jalapeños and topped with melting pepper jack cheese, this burger packs a punch in every bite.\n\nIngredients: Spicy Seasoned Beef, Jalapeño Slices, Pepper Jack Cheese, Chipotle Aioli, Green Leaf Lettuce.\n\nAllergens: Gluten, Dairy, Eggs.",
+    "photoPath": "assets/images/burgers/spicy_burger.png"
   },
-  
   {
     "categoryID": 0,
     "itemID": 7,
+    "itemName": "Chicken Burger",
+    "itemPrice": 48.90,
+    "description": "Light, lean, and flavorful. A succulent grilled chicken breast marinated in herbs, paired with creamy Swiss cheese and fresh avocado.\n\nIngredients: Marinated Chicken Breast, Swiss Cheese, Avocado, Mayo, Romaine Lettuce.\n\nAllergens: Gluten, Dairy, Eggs.",
+    "photoPath": "assets/images/burgers/chicken_burger.png"
+  },
+  {
+    "categoryID": 0,
+    "itemID": 8,
     "itemName": "Vegan Burger",
-    "itemPrice": 33.80,
-    "description": "Plant-based patty with vegan cheese, lettuce, tomato, and avocado spread.",
-    "photoPath": "assets/images/burgers/template.png"
+    "itemPrice": 55.90,
+    "description": "100% plant-based, 100% delicious. A savory beet-and-pea protein patty topped with vegan cheese and a refreshing lime-avocado spread.\n\nIngredients: Plant-based Patty, Vegan Cheddar, Avocado Spread, Sprouts, Tomato, Vegan Bun.\n\nAllergens: Gluten (Optional GF Bun available), Soy.",
+    "photoPath": "assets/images/burgers/vegan_burger.png"
   }
 ]

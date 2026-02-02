@@ -3,35 +3,32 @@
     "categoryID": 6,
     "itemID": 1,
     "itemName": "Lava Cake",
-    "itemPrice": 27.00,
-    "description": "Warm chocolate cake with a gooey molten center, served fresh.",
-    "photoPath": "assets/images/desserts/template.png"
+    "itemPrice": 29.50,
+    "description": "A chocolate lover's dream. Our signature warm cocoa cake features a decadent molten center that flows perfectly when tucked into.\n\nIngredients: Dark Belgian Chocolate, Farm-Fresh Eggs, Butter, Madagascar Vanilla, Whipped Cream Side.\n\nAllergens: Gluten, Dairy, Eggs, Soy.",
+    "photoPath": "assets/images/desserts/lavacake.png"
   },
-
   {
     "categoryID": 6,
     "itemID": 2,
     "itemName": "Pancakes",
-    "itemPrice": 22.50,
-    "description": "Fluffy stack of pancakes served with maple syrup and fresh fruits.",
-    "photoPath": "assets/images/desserts/template.png"
+    "itemPrice": 24.00,
+    "description": "A fluffy, golden-brown stack of three buttermilk pancakes. Light, airy, and served with a refreshing seasonal fruit garnish.\n\nIngredients: Buttermilk Batter, Grade A Maple Syrup, Seasonal Berries, Dusting of Powdered Sugar.\n\nAllergens: Gluten, Dairy, Eggs.",
+    "photoPath": "assets/images/desserts/pancakes.png"
   },
-
   {
     "categoryID": 6,
     "itemID": 3,
     "itemName": "Ice Cream",
     "itemPrice": 18.00,
-    "description": "Three scoops of creamy ice cream in assorted classic flavors.",
-    "photoPath": "assets/images/desserts/template.png"
+    "description": "Cool and refreshing. Three generous scoops of our premium, slow-churned gelato served in a chilled bowl.\n\nIngredients: Whole Milk, Heavy Cream, Choice of Flavor (Madagascar Vanilla, Belgian Chocolate, or Summer Strawberry).\n\nAllergens: Dairy (May contain Nuts depending on flavor).",
+    "photoPath": "assets/images/desserts/icecream.png"
   },
-  
   {
     "categoryID": 6,
     "itemID": 4,
     "itemName": "Profiterol",
-    "itemPrice": 25.00,
-    "description": "Choux pastry balls filled with cream and topped with rich chocolate sauce.",
-    "photoPath": "assets/images/desserts/template.png"
+    "itemPrice": 27.50,
+    "description": "Delicate French pastry puffs filled with a silky vanilla cream and drizzled with a warm, velvety bittersweet chocolate ganache.\n\nIngredients: Choux Pastry, Pastry Cream, Melted Dark Chocolate, Toasted Almond Flakes.\n\nAllergens: Gluten, Dairy, Eggs, Nuts.",
+    "photoPath": "assets/images/desserts/profiterol.png"
   }
 ]

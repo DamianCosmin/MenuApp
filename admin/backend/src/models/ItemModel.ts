@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { Item } from "../../../frontend/src/utils/types.js";
+import { Item } from "../types.js";
 
 export const itemSchema = new Schema<Item>({
     categoryID: {

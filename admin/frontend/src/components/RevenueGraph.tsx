@@ -8,7 +8,7 @@ import {
     Legend,
     ResponsiveContainer
 } from "recharts";
-import { RevenueGraphData } from "../utils/types";
+import { RevenueGraphData } from "../utils/types.ts";
 
 type RevenueGraphProps = {
     data: RevenueGraphData[];

@@ -11,9 +11,6 @@ import 'package:food_app/widgets/counter_button.dart';
 
 class ItemPage extends StatelessWidget {
   final ItemModel currentItem;
-  final String dummyText =
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat';
-
   const ItemPage({super.key, required this.currentItem});
 
   @override
@@ -83,8 +80,8 @@ class ItemPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  '${currentItem.description}\n\n${dummyText * 5}',
-                  textAlign: TextAlign.justify,
+                  currentItem.description,
+                  textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),

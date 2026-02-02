@@ -1,4 +1,4 @@
-import { OrderItem, AnalyticsData } from "../../frontend/src/utils/types.js";
+import { OrderItem, AnalyticsData } from "./types.js";
 import * as Database from "./database_provider.js";
 
 const categoryIdMap: Record<string, number> = {

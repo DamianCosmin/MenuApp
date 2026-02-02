@@ -4,88 +4,79 @@
     "itemID": 1,
     "itemName": "Espresso",
     "itemPrice": 12.00,
-    "description": "A strong and bold shot of pure coffee essence.",
-    "photoPath": "assets/images/coffee/template.png"
+    "description": "The pure heart of coffee. A short, intense shot with a rich crema and a powerful aroma to jumpstart your day.",
+    "photoPath": "assets/images/coffee/espresso.png"
   },
-  
   {
     "categoryID": 3,
     "itemID": 2,
     "itemName": "Americano",
-    "itemPrice": 13.50,
-    "description": "Espresso diluted with hot water for a smooth, rich taste.",
-    "photoPath": "assets/images/coffee/template.png"
+    "itemPrice": 17.50,
+    "description": "Smooth and steady. Our rich espresso tempered with hot water for those who enjoy the depth of coffee in a longer, mellow cup.",
+    "photoPath": "assets/images/coffee/americano.png"
   },
-
   {
     "categoryID": 3,
     "itemID": 3,
     "itemName": "Latte",
-    "itemPrice": 18.00,
-    "description": "A creamy blend of espresso and steamed milk with a light foam top.",
-    "photoPath": "assets/images/coffee/template.png"
+    "itemPrice": 20.00,
+    "description": "Silk in a cup. A comforting harmony of bold espresso and plenty of steamed milk, finished with a delicate layer of micro-foam.",
+    "photoPath": "assets/images/coffee/latte.png"
   },
-
   {
     "categoryID": 3,
     "itemID": 4,
     "itemName": "Cappuccino",
-    "itemPrice": 17.50,
-    "description": "Espresso topped with equal parts of steamed milk and milk foam.",
-    "photoPath": "assets/images/coffee/template.png"
+    "itemPrice": 20.00,
+    "description": "The perfect balance. Equal parts espresso, steamed milk, and airy foam for a classic, frothy Italian coffee experience.",
+    "photoPath": "assets/images/coffee/cappuccino.png"
   },
-
   {
     "categoryID": 3,
     "itemID": 5,
     "itemName": "Macchiato",
-    "itemPrice": 15.00,
-    "description": "Bold espresso with a dollop of frothy milk on top.",
-    "photoPath": "assets/images/coffee/template.png"
+    "itemPrice": 18.00,
+    "description": "Espresso with a cloud. A bold shot of coffee 'marked' with a single dollop of velvety milk foam for a touch of sweetness.",
+    "photoPath": "assets/images/coffee/macchiato.png"
   },
-
   {
     "categoryID": 3,
     "itemID": 6,
     "itemName": "Mocha",
-    "itemPrice": 20.00,
-    "description": "A chocolatey twist on a latte with espresso, milk, and cocoa.",
-    "photoPath": "assets/images/coffee/template.png"
+    "itemPrice": 18.00,
+    "description": "A liquid dessert. Indulgent chocolate meets rich espresso and steamed milk for the ultimate sweet caffeine treat.",
+    "photoPath": "assets/images/coffee/mocha.png"
   },
-
   {
     "categoryID": 3,
     "itemID": 7,
     "itemName": "Flat White",
     "itemPrice": 19.00,
-    "description": "Velvety steamed milk blended with rich espresso for a smooth finish.",
-    "photoPath": "assets/images/coffee/template.png"
+    "description": "For the true enthusiast. A double shot of espresso blended with thin, silky milk for a punchy flavor and a velvety texture.",
+    "photoPath": "assets/images/coffee/flat_white.png"
   },
-
   {
     "categoryID": 3,
     "itemID": 8,
     "itemName": "Cold Brew",
-    "itemPrice": 22.50,
-    "description": "Slow-brewed coffee served cold for a refreshing, smooth flavor.",
-    "photoPath": "assets/images/coffee/template.png"
+    "itemPrice": 18.50,
+    "description": "Patience in a glass. Steeped cold for 12 hours to extract a smooth, low-acid flavor that’s naturally sweet and incredibly refreshing.",
+    "photoPath": "assets/images/coffee/cold_brew.png"
   },
-
   {
     "categoryID": 3,
     "itemID": 9,
     "itemName": "Iced Coffee",
-    "itemPrice": 16.00,
-    "description": "Chilled brewed coffee served over ice with optional milk or syrup.",
-    "photoPath": "assets/images/coffee/template.png"
+    "itemPrice": 18.50,
+    "description": "Cool and crisp. Our signature brew served over ice for a clean, refreshing hit of caffeine that beats the heat.",
+    "photoPath": "assets/images/coffee/iced_coffee.png"
   },
-
   {
     "categoryID": 3,
     "itemID": 10,
     "itemName": "Affogato",
-    "itemPrice": 23.00,
-    "description": "A scoop of vanilla ice cream drowned in hot espresso.",
-    "photoPath": "assets/images/coffee/template.png"
+    "itemPrice": 24.00,
+    "description": "Where coffee meets gelato. A heavenly scoop of premium vanilla ice cream literally 'drowned' in a hot, fresh shot of espresso.",
+    "photoPath": "assets/images/coffee/affogato.png"
   }
 ]

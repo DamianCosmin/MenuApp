@@ -3,7 +3,7 @@ import { OrderModel, PendingOrderModel } from "./models/OrderModel.js";
 import { CounterModel } from "./models/CounterModel.js";
 import { OrderItemAnalyticsModel } from "./models/OrderItemModel.js";
 import { AnalyticsModel } from "./models/AnalyticsModel.js";
-import { Order } from "../../frontend/src/utils/types.js";
+import { Order } from "./types.js";
 
 export function getTodayStart() {
     const midnight = new Date();
