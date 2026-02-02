@@ -72,12 +72,12 @@ class OrderProvider extends ChangeNotifier {
           }),
         );
 
-        print("Response from admin: ${response.body}");
+        // print("Response from admin: ${response.body}");
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           final data = jsonDecode(response.body);
           final int orderId = data['order']['id'];
-          print("From Order Provider - order ID: $orderId");
+          // print("From Order Provider - order ID: $orderId");
 
           socket.joinOrderRoom(orderId);
 

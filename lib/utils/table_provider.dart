@@ -25,7 +25,7 @@ class TableProvider extends ChangeNotifier {
       );
 
       final data = jsonDecode(response.body);
-      print('Response after getting table orders: $data');
+      // print('Response after getting table orders: $data');
       _tableID = scannedID;
 
       if (data is List && data.isEmpty) {

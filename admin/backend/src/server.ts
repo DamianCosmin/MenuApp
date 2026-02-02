@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 
 import * as Database from "./database_provider.js";
 import { sendCustomAnalytics } from "./analytics.js";
+import { Order, AnalyticsData } from "./types.js";
 
 // Configuration
 dotenv.config();
@@ -44,7 +45,12 @@ const NR_TABLES = 23;
 
 // Routes
 app.post("/api/new_order", async (req, res) => {
-    const newOrder = await Database.addPendingOrder(req.body);
+    const newOrder: Order | null = await Database.addPendingOrder(req.body);
+
+    if (!newOrder) {
+        return res.status(400).json({ message: "Failed to create order" });
+    }
+
     io.emit("newOrder", newOrder);
 
     console.log("New order received:", newOrder);
@@ -53,7 +59,12 @@ app.post("/api/new_order", async (req, res) => {
 
 
 app.get("/api/orders", async (_, res) => {
-    const allOrders = await Database.getAllOrders();
+    const allOrders: Order[] | null = await Database.getAllOrders();
+
+    if (!allOrders) {
+        return res.status(400).json({ message: "Failed to get all orders" });
+    }
+
     return res.json(allOrders);
 });
 
@@ -66,13 +77,18 @@ app.put("/api/orders/:id", async (req, res) => {
         const result = await Database.addOrderToDB(orderID);
 
         if (!result) {
-        return res.status(404).json({ message: "Order to be confirmed not found" });
+            return res.status(404).json({ message: "Order to be confirmed not found" });
         }
 
-        const { confirmedOrder, roomNumber } = result;
+        const confirmedOrder: Order | null = result.confirmedOrder; 
+        const roomNumber = result.roomNumber;
+
+        if (!confirmedOrder) {
+            return res.status(404).json({ message: "Order to be confirmed not found" });
+        }
     
         if (!BOOKED_TABLES.includes(confirmedOrder.tableID)) {
-        BOOKED_TABLES.push(confirmedOrder.tableID);
+            BOOKED_TABLES.push(confirmedOrder.tableID);
         }
 
         await Database.updateAnalytics(confirmedOrder, BOOKED_TABLES.length, NR_TABLES);
@@ -87,8 +103,8 @@ app.put("/api/orders/:id", async (req, res) => {
 
 app.delete("/api/orders/:id", async (req, res) => {
     const orderID = parseInt(req.params.id);
+    const deletedOrder: Order | null = await Database.deletePendingOrder(orderID);
 
-    const deletedOrder = await Database.deletePendingOrder(orderID);
     if (!deletedOrder) {
         return res.status(404).json({ message: "Order to be deleted not found" });
     }
@@ -108,19 +124,20 @@ app.get("/api/tables/indexes", (_, res) => {
 app.get("/api/tables/:tblId", async (req, res) => {
     const givenTable = parseInt(req.params.tblId);
 
-    const tableOrders = await Database.getTableOrders(givenTable);
+    const tableOrders: Order[] | null = await Database.getTableOrders(givenTable);
     res.json(tableOrders);
 });
 
 
 app.get("/api/analytics/graphs", async (req, res) => {
+    // createdAt field is needed, so we do not cast to AnalyticsData
     let graphsData = await Database.getGraphsData();
     res.json(graphsData);
 })
 
 
 app.get("/api/analytics", async (_, res) => {
-    let customAnalyticsData = await sendCustomAnalytics(["ALL"]);
+    let customAnalyticsData: AnalyticsData = await sendCustomAnalytics(["ALL"]);
     res.json(customAnalyticsData);
 });
 
@@ -128,7 +145,7 @@ app.get("/api/analytics", async (_, res) => {
 app.get("/api/analytics/:fields", async (req, res) => {
     const fields: string[] = req.params.fields.split(",");
 
-    let customAnalyticsData = await sendCustomAnalytics(fields);
+    let customAnalyticsData: AnalyticsData = await sendCustomAnalytics(fields);
     res.json(customAnalyticsData);
 });
 
