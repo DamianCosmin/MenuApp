@@ -3,6 +3,7 @@ import { OrderModel, PendingOrderModel } from "./models/OrderModel.js";
 import { CounterModel } from "./models/CounterModel.js";
 import { OrderItemAnalyticsModel } from "./models/OrderItemModel.js";
 import { AnalyticsModel } from "./models/AnalyticsModel.js";
+import { BookedTablesModel } from "./models/BookedTablesModel.js";
 import { Order } from "./types.js";
 
 export function getTodayStart() {
@@ -109,12 +110,48 @@ export async function addOrderToDB(orderID: number) {
             orderData.expiresAt = getNextDayStart();
 
             const confirmedOrder = await OrderModel.create(orderData);
+
+            const bookedResult = await BookedTablesModel.findOneAndUpdate(
+                { name: 'indexes'},
+                { $addToSet: {booked: orderData.tableID} },
+                { upsert: true, new: true }
+            );
+
+            if (!bookedResult) {
+                return null;
+            }
+
             return { confirmedOrder, roomNumber: previousID };
         } else {
             return null;
         }
     } catch (error) {
         console.error("Error in saving the order: ", error);
+        return null;
+    }
+}
+
+export async function finishOrder(orderID: number) {
+    if (!orderID) {
+        return null;
+    }
+
+    try {
+        const currentOrder = await OrderModel.findOneAndUpdate(
+            { id: orderID },
+            { $set: {status: 'Finished'} },
+            { new: true }
+        );
+
+        if (currentOrder) {
+            const {_id, __v, ...finishedOrder} = currentOrder.toObject();
+
+            return finishedOrder;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error in finishing the order: ", error);
         return null;
     }
 }
@@ -148,7 +185,24 @@ export async function getTableOrders(tblID: number) {
     }
 }
 
-export async function updateAnalytics(order: Order, bookedTables: number, totalTables: number) {
+export async function getBookedTables() {
+    try {
+        const bookedTables = await BookedTablesModel.findOne({name: 'indexes'});
+
+        if (bookedTables) {
+            const {_id, __v, name, createdAt, booked} = bookedTables.toObject();
+
+            return booked;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error in getting the booked tables indexes: ", error);
+        return null;
+    }
+}
+
+export async function updateAnalytics(order: Order, nrBookedTables: number, totalTables: number) {
     if (order == null) {
         return;
     }
@@ -172,7 +226,7 @@ export async function updateAnalytics(order: Order, bookedTables: number, totalT
 
         await Promise.all(dbPromises);
 
-        const occupation = (bookedTables / totalTables) * 100;
+        const occupation = (nrBookedTables / totalTables) * 100;
         const occupationPercent = Math.round(occupation * 100) / 100;
         const todayStart = getTodayStart();
 
@@ -250,6 +304,7 @@ export async function helperClearDatabases() {
         await CounterModel.deleteMany({});
         await OrderItemAnalyticsModel.deleteMany({});
         await AnalyticsModel.deleteMany({});
+        await BookedTablesModel.deleteMany({});
     } catch (error) {
         console.error("Error in cleaning databases: ", error);
     }

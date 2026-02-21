@@ -37,7 +37,21 @@ function OrderCard({order}: OrderProps) {
         }
     };
 
-    const finishOrder = () => {};
+    const finishOrder = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/api/orders/${order.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ newStatus: "Finished" }),
+            });
+
+            const data = await response.json();
+            console.log("Order finished:", data);
+            
+        } catch (error) {
+            console.error("Failed to finish order!", error);
+        }
+    };
 
     return (
         <div key={order.id} className="bg-secondary bg-opacity-25 text-light w-100 rounded p-3 mb-4">

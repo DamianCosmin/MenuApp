@@ -5,7 +5,8 @@ import OrderCard from "../components/OrderCard.tsx";
 import { Order } from "../utils/types.ts";
 
 function OrdersPage() {
-    const [orders, setOrders] = useState<Order[] | null>(null);
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [showFinished, setShowFinished] = useState<boolean>(false);
 
     const fetchOrders = async () => {
         try {
@@ -15,6 +16,10 @@ function OrdersPage() {
         } catch (err) {
             console.error("Error fetching orders:", err);
         }
+    }
+
+    const toggleFinishedOrders = () => {
+        setShowFinished(!showFinished);
     }
 
     useEffect(() => {
@@ -40,10 +45,23 @@ function OrdersPage() {
             setOrders(prev => prev ? prev.filter(o => o.id !== deletedOrder.id) : []);
         });
 
+        socket.on("orderFinished", (finishedOrder) => {
+            setOrders(prev => {
+                if (!prev) {
+                    return [];
+                }
+
+                const otherOrders = prev.filter(o => o.id !== finishedOrder.id);
+
+                return [...otherOrders, finishedOrder];
+            })
+        });
+
         return () => {
             socket.off("newOrder");
             socket.off("orderConfirmed");
             socket.off("orderDeleted");
+            socket.off("orderFinished");
         };
     }, []);
 
@@ -55,10 +73,36 @@ function OrdersPage() {
             >
                 <h2 className="mb-4">Current Orders</h2>
                 
-                { orders === null ? null : orders.length === 0 ? 
-                    (<p>No orders yet</p>) : 
-                    (orders.map((ord) => <OrderCard key={`${ord.id}-${ord.status}`} order={ord}/>))
+                {orders && orders.length === 0 ? 
+                    <p>No orders yet</p> : 
+                    orders.map((ord) => {
+                        if (ord.status !== 'Finished') {
+                            return <OrderCard key={`${ord.id}-${ord.status}`} order={ord}/>
+                        } 
+                        
+                        return null;
+                    })
+                }   
+
+                {showFinished && orders && orders.some(ord => ord.status === 'Finished') &&
+                    <div className="w-100">
+                        <hr className="mt-0 mb-4 border-light opacity-50" />
+
+                        {orders.map((ord) => {
+                            if (ord.status === 'Finished') {
+                                return <OrderCard key={`${ord.id}-${ord.status}`} order={ord}/>
+                            }
+
+                            return null;
+                        })}
+                    </div>
                 }
+                
+                {orders && orders.some(ord => ord.status === 'Finished') &&
+                    <div className="my-4 d-flex flex-wrap justify-content-center gap-2 gap-md-4">
+                        <button className="btn btn-lg btn-light rounded-pill px-5" type="button" onClick={toggleFinishedOrders} onMouseUp={(e) => e.currentTarget.blur()}>TOGGLE FINISHED ORDERS</button>
+                    </div>
+                }      
             </div>
         </div>
     );

@@ -212,7 +212,9 @@ class HomePageState extends State<HomePage>
                   background: Opacity(
                     opacity: 0.85,
                     child: Image(
-                      image: AssetImage('assets/images/homepage/restaurant2.png'),
+                      image: AssetImage(
+                        'assets/images/homepage/restaurant2.png',
+                      ),
                       fit: BoxFit.cover,
                     ),
                   ),

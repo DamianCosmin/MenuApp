@@ -14,6 +14,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5050;
 const API_URL = process.env.API_URL || "http://127.0.0.1/api";
+const NR_TABLES = 23;
 
 // Middleware
 app.use(cors());
@@ -39,9 +40,6 @@ io.on("connection", (socket) => {
         console.log(`Socket ${socket.id} joined room ${orderId} from backend`);
     });
 });
-
-let BOOKED_TABLES: number[] = [];
-const NR_TABLES = 23;
 
 // Routes
 app.post("/api/new_order", async (req, res) => {
@@ -75,8 +73,9 @@ app.put("/api/orders/:id", async (req, res) => {
 
     if (newStatus === 'Confirmed') {
         const result = await Database.addOrderToDB(orderID);
+        const bookedTables = await Database.getBookedTables()
 
-        if (!result) {
+        if (!result || !bookedTables) {
             return res.status(404).json({ message: "Order to be confirmed not found" });
         }
 
@@ -86,17 +85,25 @@ app.put("/api/orders/:id", async (req, res) => {
         if (!confirmedOrder) {
             return res.status(404).json({ message: "Order to be confirmed not found" });
         }
-    
-        if (!BOOKED_TABLES.includes(confirmedOrder.tableID)) {
-            BOOKED_TABLES.push(confirmedOrder.tableID);
-        }
 
-        await Database.updateAnalytics(confirmedOrder, BOOKED_TABLES.length, NR_TABLES);
+        await Database.updateAnalytics(confirmedOrder, bookedTables.length, NR_TABLES);
 
-        io.emit("orderConfirmed", {updatedOrder: confirmedOrder, pendingId: roomNumber, indexes: BOOKED_TABLES});
+        io.emit("orderConfirmed", {updatedOrder: confirmedOrder, pendingId: roomNumber, indexes: bookedTables});
         io.to(roomNumber.toString()).emit("adminConfirmed");
 
         return res.json({ message: "Order updated", confirmedOrder });
+    }
+
+    if (newStatus === 'Finished') {
+        const finishedOrder = await Database.finishOrder(orderID);
+
+        if (!finishedOrder) {
+            return res.status(404).json({ message: "Order to be finished not found" });
+        }
+
+        io.emit("orderFinished", finishedOrder);
+
+        return res.json({ message: "Order finished", finishedOrder});
     }
 });
 
@@ -116,8 +123,10 @@ app.delete("/api/orders/:id", async (req, res) => {
 });
 
 
-app.get("/api/tables/indexes", (_, res) => {
-    res.json(BOOKED_TABLES);
+app.get("/api/tables/indexes", async (_, res) => {
+    const bookedTables: Number[] | null = await Database.getBookedTables();
+    console.log(bookedTables);
+    res.json(bookedTables);
 })
 
 
