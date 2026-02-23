@@ -140,6 +140,7 @@ class HomePageState extends State<HomePage>
       if (showOptions) {
         handleOptions();
       }
+
       Navigator.push(context, MaterialPageRoute(builder: (context) => page));
     }
 

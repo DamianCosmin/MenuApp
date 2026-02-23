@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { equalItems, Order, OrderItem } from "../utils/types.ts";
+import { Order } from "../utils/types.ts";
 import { BASE_URL, socket } from "../utils/routes.ts";
 import GridMap from "../components/GridMap.tsx";
 import SideOrder from "../components/SideOrder.tsx";
@@ -15,23 +15,7 @@ const tableMap = [
 function TablesPage () {
     const [tableID, setTableID] = useState<number | null>(null);
     const [bookedTables, setBookesTables] = useState<number[]>([]);
-    const [order, setOrder] = useState<OrderItem[]>([]);
-
-    const mergeOrderItems = (allItems: OrderItem[]): OrderItem[] => {
-        const merged: OrderItem[] = [];
-
-        for (let ordItem of allItems) {
-            let existingItem = merged.find((oi) => equalItems(oi.item, ordItem.item));
-
-            if (existingItem) {
-                existingItem.quantity += ordItem.quantity;
-            } else {
-                merged.push({...ordItem});
-            }
-        }
-
-        return merged;
-    }
+    const [orders, setOrders] = useState<Order[]>([]);
 
     const fetchBookedTables = async () => {
         const res = await fetch(`${BASE_URL}/api/tables/indexes`);
@@ -46,13 +30,8 @@ function TablesPage () {
 
             const res = await fetch(`${BASE_URL}/api/tables/${tableIndex}`);
             const data = await res.json();
-            
-            const allItems: OrderItem[] = data.flatMap((order: Order) => 
-                order.items.map((ordItem: OrderItem) => ({item: ordItem.item, quantity: ordItem.quantity})));
 
-            const mergedItems = mergeOrderItems(allItems);
-
-            setOrder(mergedItems);
+            setOrders(data);
         }
 
         fetchBookedTables();
@@ -60,24 +39,34 @@ function TablesPage () {
         if (tableID !== null) {
             fetchTableOrders(tableID);
         } else {
-            setOrder([]);
+            setOrders([]);
         }
 
         const handleOrderConfirmed = ({updatedOrder, pendingId, indexes} : {updatedOrder: Order, pendingId: number, indexes: number[]}) => {
             setBookesTables(indexes);
             if (updatedOrder.tableID === tableID) {
-                setOrder((prev) => {
-                    const allItems = prev ? [...prev, ...updatedOrder.items] : [...updatedOrder.items];
-                    const mergedItems = mergeOrderItems(allItems);
-                    return mergedItems;
+                setOrders((prev) => {
+                    return prev ? [...prev, updatedOrder] : [updatedOrder];
                 });
             }
         };
 
+        const handleOrderFinished = (finishedOrder: Order) => {
+            if (finishedOrder.tableID === tableID) {
+                setOrders((prev) => 
+                    prev.map((ord) => {
+                        return ord.id === finishedOrder.id ? finishedOrder : ord;
+                    })
+                );
+            }
+        }
+
         socket.on("orderConfirmed", handleOrderConfirmed);
+        socket.on("orderFinished", handleOrderFinished);
 
         return () => {
             socket.off("orderConfirmed", handleOrderConfirmed);
+            socket.off("orderFinished", handleOrderFinished);
         };
     }, [tableID]);
 
@@ -87,14 +76,14 @@ function TablesPage () {
             className="pt-4 pb-5 px-3 px-md-5 bg-dark rounded d-flex flex-column align-items-center"
             style={{ minWidth: '340px' }}
             >
-                <h2 className="mb-4">Tables</h2>
+                <h2 className="mb-4">TABLES</h2>
                 <div className="tables-container">
                     <GridMap rows={tableMap.length} columns={tableMap[0].length} mapData={tableMap} 
                     bookedTablesID={bookedTables}
                     onSelect={(id) =>
                     id ? setTableID(id) : setTableID(null)
                     } />
-                    <SideOrder tableId={tableID} allItems={tableID !== null ? (order ? order : null) : null} onClose={() => setTableID(null)} />
+                    <SideOrder tableId={tableID} tableOrders={tableID !== null ? (orders ? orders : null) : null} onClose={() => setTableID(null)} />
                 </div>
             </div>
         </div>

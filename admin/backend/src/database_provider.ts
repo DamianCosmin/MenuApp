@@ -189,13 +189,7 @@ export async function getBookedTables() {
     try {
         const bookedTables = await BookedTablesModel.findOne({name: 'indexes'});
 
-        if (bookedTables) {
-            const {_id, __v, name, createdAt, booked} = bookedTables.toObject();
-
-            return booked;
-        } else {
-            return null;
-        }
+        return bookedTables ? bookedTables.booked : [];
     } catch (error) {
         console.error("Error in getting the booked tables indexes: ", error);
         return null;
@@ -255,7 +249,7 @@ export async function getTodayAnalytics() {
             return null;
         }
     } catch (error) {
-        console.log("Error in getting today's analytics: ", error);
+        console.error("Error in getting today's analytics: ", error);
         return null;
     }
 }

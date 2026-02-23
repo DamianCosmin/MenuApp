@@ -147,6 +147,7 @@
   border: 2px solid orange;
   border-radius: 8px;
   background-color: bisque;
+  color: black;
   cursor: pointer;
   display: flex;
   flex-direction: row;
@@ -168,7 +169,8 @@
 }
 
 .side-order {
-  display: block !important;
+  display: flex !important;
+  flex-direction: column;
   position: relative;
   width: 20vw;
   min-width: 260px;

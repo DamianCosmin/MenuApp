@@ -125,7 +125,6 @@ app.delete("/api/orders/:id", async (req, res) => {
 
 app.get("/api/tables/indexes", async (_, res) => {
     const bookedTables: Number[] | null = await Database.getBookedTables();
-    console.log(bookedTables);
     res.json(bookedTables);
 })
 

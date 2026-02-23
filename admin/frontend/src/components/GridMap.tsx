@@ -26,8 +26,8 @@ function GridMap({rows, columns, mapData, bookedTablesID, onSelect}: GridMapProp
                 const currentIndex = tableIndex;
                 
                 return <TableIconButton key={index} id={currentIndex} 
-                isBooked={bookedTablesID.some(tblID => tblID === currentIndex)} 
-                onOpen={() => onSelect(currentIndex)} />
+                    isBooked={bookedTablesID.some(tblID => tblID === currentIndex)} 
+                    onOpen={() => onSelect(currentIndex)} />
             })}
         </div>
     );

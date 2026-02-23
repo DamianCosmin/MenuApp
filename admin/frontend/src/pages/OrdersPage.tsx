@@ -35,14 +35,14 @@ function OrdersPage() {
                     return [];
                 }
 
-                const otherOrders = prev.filter(o => o.id !== pendingId);
+                const otherOrders = prev.filter(o => !(o.id === pendingId && o.status === 'Pending'));
 
                 return [...otherOrders, updatedOrder];
             });
         });
 
         socket.on("orderDeleted", (deletedOrder) => {
-            setOrders(prev => prev ? prev.filter(o => o.id !== deletedOrder.id) : []);
+            setOrders(prev => prev ? prev.filter(o => !(o.id === deletedOrder.id && o.status === 'Pending')) : []);
         });
 
         socket.on("orderFinished", (finishedOrder) => {
@@ -51,7 +51,7 @@ function OrdersPage() {
                     return [];
                 }
 
-                const otherOrders = prev.filter(o => o.id !== finishedOrder.id);
+                const otherOrders = prev.filter(o => !(o.id === finishedOrder.id && o.status === 'Confirmed'));
 
                 return [...otherOrders, finishedOrder];
             })
@@ -71,7 +71,7 @@ function OrdersPage() {
             className="pt-4 px-3 px-md-5 bg-dark rounded d-flex flex-column align-items-center"
             style={{ width: '40vw', minWidth: '340px' }}
             >
-                <h2 className="mb-4">Current Orders</h2>
+                <h2 className="mb-4">CURRENT ORDERS</h2>
                 
                 {orders && orders.length === 0 ? 
                     <p>No orders yet</p> : 
@@ -100,7 +100,9 @@ function OrdersPage() {
                 
                 {orders && orders.some(ord => ord.status === 'Finished') &&
                     <div className="my-4 d-flex flex-wrap justify-content-center gap-2 gap-md-4">
-                        <button className="btn btn-lg btn-light rounded-pill px-5" type="button" onClick={toggleFinishedOrders} onMouseUp={(e) => e.currentTarget.blur()}>TOGGLE FINISHED ORDERS</button>
+                        <button className="btn btn-lg btn-light rounded-pill px-5" type="button" onClick={toggleFinishedOrders} onMouseUp={(e) => e.currentTarget.blur()}>
+                            {showFinished ? "HIDE FINISHED ORDERS" : "SHOW FINISHED ORDERS"}
+                        </button>
                     </div>
                 }      
             </div>
