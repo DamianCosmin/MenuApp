@@ -24,12 +24,20 @@ Designed to offer a polished experience and instant visual feedback on users' or
 ## Screenshots
 
 ### 📱 Mobile app
-<img src="assets/images/iphone_screenshot1.png">
-<img src="assets/images/iphone_screenshot2.png">
+<div align="center">
+    <img src="screenshots/mobile1.png" width="600">
+    <br><br>
+    <img src="screenshots/mobile2.png" width="600">
+    <br><br>
+    <img src="screenshots/mobile3.png" width="600">
+</div>
 
 ### 🖥️ Admin panel
-<img src="assets/images/admin_screenshot1.png">
-<img src="assets/images/admin_screenshot2.png">
+<div align="center">
+    <img src="screenshots/desktop1.png" width="600">
+    <br><br>
+    <img src="screenshots/desktop2.png" width="600">
+</div>
 
 
 ## Tech stack
