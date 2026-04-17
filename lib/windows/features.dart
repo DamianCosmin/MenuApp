@@ -1,11 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:food_app/utils/table_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:food_app/utils/style.dart';
 import 'package:food_app/utils/order_provider.dart';
+import 'package:food_app/utils/table_provider.dart';
 import 'package:food_app/widgets/order_item.dart';
+import 'package:food_app/windows/payment.dart';
 import 'package:food_app/main.dart';
 
 class FeaturesPage extends StatefulWidget {
@@ -17,6 +18,22 @@ class FeaturesPage extends StatefulWidget {
 
 class FeaturesPageState extends State<FeaturesPage> with RouteAware {
   bool _isInit = true;
+
+  final List<String> requestNames = [
+    'Call the waiter',
+    'Ash tray',
+    'Cutlery',
+    'Tissues',
+    'Blanket',
+  ];
+
+  final List<String> requestsIconPaths = [
+    'assets/icons/waiter.png',
+    'assets/icons/ashtray.png',
+    'assets/icons/cutlery.png',
+    'assets/icons/tissues.png',
+    'assets/icons/blanket.png',
+  ];
 
   @override
   void didChangeDependencies() {
@@ -50,22 +67,6 @@ class FeaturesPageState extends State<FeaturesPage> with RouteAware {
 
     final prevOrder = context.watch<TableProvider>().previousOrder;
     final tableTotal = context.read<TableProvider>().getTableTotal();
-
-    final List<String> requestNames = [
-      'Call the waiter',
-      'Ash tray',
-      'Cutlery',
-      'Tissues',
-      'Blanket',
-    ];
-
-    final List<String> requestsIconPaths = [
-      'assets/icons/waiter.png',
-      'assets/icons/ashtray.png',
-      'assets/icons/cutlery.png',
-      'assets/icons/tissues.png',
-      'assets/icons/blanket.png',
-    ];
 
     void handleOrderMore() {
       final currentRoute = ModalRoute.of(context);
@@ -299,7 +300,12 @@ class FeaturesPageState extends State<FeaturesPage> with RouteAware {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PaymentPage()),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(
                       vertical: 16,
@@ -314,7 +320,7 @@ class FeaturesPageState extends State<FeaturesPage> with RouteAware {
                       borderRadius: BorderRadius.circular(50),
                     ),
                   ),
-                  child: Text('PAY'),
+                  child: Text('GO TO PAYMENT'),
                 ),
               ],
             ),

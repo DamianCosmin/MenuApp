@@ -9,31 +9,31 @@ interface SideOrderProps {
     onClose: () => void;
 }
 
+export const mergeOrderItems = (orders: Order[]): OrderItem[] => {
+    const allItems: OrderItem[] = orders.flatMap((order: Order) => 
+        order.items.map((ordItem: OrderItem) => ({item: ordItem.item, quantity: ordItem.quantity})));
+
+    const merged: OrderItem[] = [];
+
+    for (let ordItem of allItems) {
+        let existingItem = merged.find((oi) => equalItems(oi.item, ordItem.item));
+
+        if (existingItem) {
+            existingItem.quantity += ordItem.quantity;
+        } else {
+            merged.push({...ordItem});
+        }
+    }
+
+    return merged;
+}
+
 function SideOrder ({tableId, tableOrders, onClose} : SideOrderProps) {
     const [showMerged, setShowMerged] = useState<boolean>(false);
 
     const toggleMerged = () => {
         setShowMerged(!showMerged);
     }
-
-    const mergeOrderItems = (orders: Order[]): OrderItem[] => {
-            const allItems: OrderItem[] = orders.flatMap((order: Order) => 
-                order.items.map((ordItem: OrderItem) => ({item: ordItem.item, quantity: ordItem.quantity})));
-
-            const merged: OrderItem[] = [];
-    
-            for (let ordItem of allItems) {
-                let existingItem = merged.find((oi) => equalItems(oi.item, ordItem.item));
-    
-                if (existingItem) {
-                    existingItem.quantity += ordItem.quantity;
-                } else {
-                    merged.push({...ordItem});
-                }
-            }
-    
-            return merged;
-        }
 
     if (!tableOrders) return null;
 

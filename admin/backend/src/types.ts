@@ -42,3 +42,12 @@ export interface RevenueGraphData {
     name: string;
     revenue: number;
 }
+
+export interface PaymentData {
+    id: number;
+    status: string;
+    totalAmount: number;
+    method: string;
+    tableID: number;
+    orders: Order[];
+}

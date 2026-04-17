@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage.tsx';
 import OrdersPage from './pages/OrdersPage.tsx';
 import TablesPage from './pages/TablesPage.tsx';
 import AnalyticsPage from './pages/AnalyticsPage.tsx';
+import PaymentsPage from './pages/PaymentsPage.tsx';
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
                 <Route path="/orders" element={<OrdersPage />} />
                 <Route path="/tables" element={<TablesPage />} />
                 <Route path="/analytics" element={<AnalyticsPage />} />
+                <Route path="/payments" element={<PaymentsPage />} />
                 <Route path="/login" element={<LoginPage />} />
             </Routes>
         </Router>
