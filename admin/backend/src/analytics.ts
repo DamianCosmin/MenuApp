@@ -65,6 +65,7 @@ export async function sendCustomAnalytics(categoryList: string[]) : Promise<Anal
     return {
         totalOrders: analytics?.totalOrders || 0,
         totalRevenue: itemsRevenue,
+        totalTips: analytics?.totalTips || 0,
         totalItems: itemsCount,
         occupation: analytics?.occupationRate || 0,
         bestSellers: bestSellers

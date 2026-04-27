@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:food_app/utils/style.dart';
+import 'package:food_app/utils/order_model.dart';
 import 'package:food_app/utils/table_provider.dart';
+import 'package:food_app/utils/payment_provider.dart';
 
 class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key});
@@ -31,8 +33,9 @@ class PaymentPageState extends State<PaymentPage> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    final prevOrder = context.watch<TableProvider>().previousOrder;
+    List<OrderModel> prevOrders = context.read<TableProvider>().fullOrders;
     final tableTotal = context.read<TableProvider>().getTableTotal();
+    final tableID = context.read<TableProvider>().tableID;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -381,7 +384,27 @@ class PaymentPageState extends State<PaymentPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final tableProvider = context.read<TableProvider>();
+                      final paymentProvider = context.read<PaymentProvider>();
+
+                      await tableProvider.fetchPreviousOrder();
+                      prevOrders = tableProvider.fullOrders;
+
+                      final response = await paymentProvider.sendPaymentToAdmin(
+                        prevOrders,
+                        tableID,
+                        tableTotal,
+                        tipAmount,
+                        paymentNames[selectedIndex],
+                      );
+
+                      if (!context.mounted) {
+                        return;
+                      }
+
+                      Navigator.pop(context);
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(
                         vertical: 16,

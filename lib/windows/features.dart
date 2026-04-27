@@ -100,8 +100,7 @@ class FeaturesPageState extends State<FeaturesPage> with RouteAware {
         backgroundColor: appSecondaryColor,
         strokeWidth: 2,
         onRefresh: () async {
-          context.read<TableProvider>().fetchPreviousOrder();
-          setState(() {});
+          await context.read<TableProvider>().fetchPreviousOrder();
         },
         child: SingleChildScrollView(
           padding: EdgeInsets.only(

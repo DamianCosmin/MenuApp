@@ -9,6 +9,7 @@ import 'package:food_app/utils/style.dart';
 import 'package:food_app/utils/order_provider.dart';
 import 'package:food_app/utils/counter_provider.dart';
 import 'package:food_app/utils/table_provider.dart';
+import 'package:food_app/utils/payment_provider.dart';
 
 import 'package:food_app/windows/burgers.dart';
 import 'package:food_app/windows/pizza.dart';
@@ -30,6 +31,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => TableProvider()),
         ChangeNotifierProvider(create: (_) => CounterProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(create: (_) => PaymentProvider()),
       ],
       child: const MyApp(),
     ),

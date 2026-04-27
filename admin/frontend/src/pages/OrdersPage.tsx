@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import { BASE_URL, socket } from "../utils/routes.ts";
 import OrderCard from "../components/OrderCard.tsx";
-import { Order } from "../utils/types.ts";
+import { Order, PaymentData } from "../utils/types.ts";
 
 function OrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
@@ -25,11 +25,12 @@ function OrdersPage() {
     useEffect(() => {
         fetchOrders();
 
-        socket.on("newOrder", (order) => {
+        // TO-DO: format all the functions here in the same format as in TablesPage.tsx
+        socket.on("newOrder", (order: Order) => {
             setOrders(prev => prev ? [order, ...prev] : [order]);
         });
 
-        socket.on("orderConfirmed", ({updatedOrder, pendingId, _}) => {
+        socket.on("orderConfirmed", ({updatedOrder, pendingId, _}: {updatedOrder: Order, pendingId: number, _: number[]}) => {
             setOrders(prev => {
                 if (!prev) {
                     return [];
@@ -41,11 +42,11 @@ function OrdersPage() {
             });
         });
 
-        socket.on("orderDeleted", (deletedOrder) => {
+        socket.on("orderDeleted", (deletedOrder: Order) => {
             setOrders(prev => prev ? prev.filter(o => !(o.id === deletedOrder.id && o.status === 'Pending')) : []);
         });
 
-        socket.on("orderFinished", (finishedOrder) => {
+        socket.on("orderFinished", (finishedOrder: Order) => {
             setOrders(prev => {
                 if (!prev) {
                     return [];
@@ -57,11 +58,24 @@ function OrdersPage() {
             })
         });
 
+        socket.on("newPayment", (newPayment: PaymentData) => {
+            setOrders(prev => {
+                if (!prev) {
+                    return [];
+                }
+
+                const paidOrdersIds = newPayment.orders.map(ord => ord.id);
+                const unpaidOrders = prev.filter(ord => !paidOrdersIds.includes(ord.id));
+                return unpaidOrders;
+            })
+        })
+
         return () => {
             socket.off("newOrder");
             socket.off("orderConfirmed");
             socket.off("orderDeleted");
             socket.off("orderFinished");
+            socket.off("newPayment");
         };
     }, []);
 

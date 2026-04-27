@@ -8,9 +8,45 @@ function PaymentsPage() {
     const [payments, setPayments] = useState<PaymentData[]>([]);
     const [showCompleted, setShowCompleted] = useState<boolean>(false);
 
+    const fetchPayments = async () => {
+        try {
+            const res = await fetch(`${BASE_URL}/api/payments`);
+            const data: PaymentData[] = await res.json();
+            setPayments(data);
+        } catch (err) {
+            console.error("Error fetching payments:", err);
+        }
+    }
+
     const toggleCompletedPayments = () => {
         setShowCompleted(!showCompleted);
     }
+
+    useEffect(() => {
+        fetchPayments();
+        
+        // TO-DO: format all the functions here in the same format as in TablesPage.tsx
+        socket.on("newPayment", (payment) => {
+            setPayments(prev => prev ? [payment, ...prev] : [payment]);
+        });
+
+        socket.on("paymentCompleted", (completedPayment) => {
+            setPayments(prev => {
+                if (!prev) {
+                    return [];
+                }
+
+                const otherPayments = prev.filter(p => !(p.id === completedPayment.id && p.status === 'Pending'));
+
+                return [...otherPayments, completedPayment];
+            });
+        });
+
+        return () => {
+            socket.off("newPayment");
+            socket.off("paymentCompleted");
+        }
+    }, [])
 
     return (
         <div className="orders-page">

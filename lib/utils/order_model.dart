@@ -30,4 +30,16 @@ class OrderModel {
       total: (json['total'] as num).toDouble(),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": orderID,
+      "status": orderStatus,
+      "tableID": tableID,
+      "items": orderItems.map((entry) {
+        return {"item": entry.key.toJson(), "quantity": entry.value};
+      }).toList(),
+      "total": total,
+    };
+  }
 }

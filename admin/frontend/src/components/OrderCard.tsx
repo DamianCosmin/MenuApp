@@ -60,7 +60,7 @@ function OrderCard({order}: OrderProps) {
                     <h4 className="mb-1">New Order</h4> : 
                     <h4 className="mb-1">Order No. {order.id}</h4>
                 }
-                <p className="mb-0">Status: {order.status}</p>
+                <p className="mb-0">Status: <b>{order.status}</b></p>
             </div>
 
             <div className="ms-3">

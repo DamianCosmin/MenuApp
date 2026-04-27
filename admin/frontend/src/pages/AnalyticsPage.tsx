@@ -58,6 +58,7 @@ function AnalyticsPage() {
         let customAnalytics: AnalyticsData = {
             totalOrders: analytics?.totalOrders ?? 0,
             totalRevenue: analytics.totalRevenue ?? 0,
+            totalTips: analytics.totalTips ?? 0,
             totalItems: analytics.totalItems ?? 0,
             occupation: analytics?.occupation ?? 0,
             bestSellers: analytics?.bestSellers ?? []
@@ -166,10 +167,17 @@ function AnalyticsPage() {
                             </div>
                         </div>
 
-                        <div className="col-11 mx-auto col-md-6">
+                        <div className="col-11 mx-auto col-md-4">
                             <div className="p-3 bg-dark rounded shadow-sm analytics-item">
                                 <p className="fs-5 fw-normal">Total revenue</p>
                                 <p className="fs-1 fw-bold mb-1 text-revenue">{data ? data.totalRevenue.toFixed(2) + ' RON': 'N/A'}</p>
+                            </div>
+                        </div>
+
+                        <div className="col-11 mx-auto col-md-4">
+                            <div className="p-3 bg-dark rounded shadow-sm analytics-item">
+                                <p className="fs-5 fw-normal">Total tips</p>
+                                <p className="fs-1 fw-bold mb-1 text-revenue">{data ? data.totalTips.toFixed(2) + ' RON': 'N/A'}</p>
                             </div>
                         </div>
 

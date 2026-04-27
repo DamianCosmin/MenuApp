@@ -28,6 +28,7 @@ export interface Order {
 export interface AnalyticsData {
     totalOrders: number;
     totalRevenue: number;
+    totalTips: number;
     totalItems: number;
     occupation: number;
     bestSellers: string[];
@@ -47,6 +48,7 @@ export interface PaymentData {
     id: number;
     status: string;
     totalAmount: number;
+    totalTips: number;
     method: string;
     tableID: number;
     orders: Order[];

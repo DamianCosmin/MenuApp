@@ -4,7 +4,8 @@ import { CounterModel } from "./models/CounterModel.js";
 import { OrderItemAnalyticsModel } from "./models/OrderItemModel.js";
 import { AnalyticsModel } from "./models/AnalyticsModel.js";
 import { BookedTablesModel } from "./models/BookedTablesModel.js";
-import { Order } from "./types.js";
+import { PaymentModel } from "./models/PaymentModel.js";
+import { Order, PaymentData } from "./types.js";
 
 export function getTodayStart() {
     const midnight = new Date();
@@ -73,7 +74,7 @@ export async function addPendingOrder(body: any) {
 }
 
 export async function deletePendingOrder(orderID: Number) {
-    if (!orderID) {
+    if (orderID == null) {
         return null;
     }
 
@@ -87,7 +88,7 @@ export async function deletePendingOrder(orderID: Number) {
 }
 
 export async function addOrderToDB(orderID: number) {
-    if (!orderID) {
+    if (orderID == null) {
         return null;
     }
 
@@ -132,13 +133,13 @@ export async function addOrderToDB(orderID: number) {
 }
 
 export async function finishOrder(orderID: number) {
-    if (!orderID) {
+    if (orderID == null) {
         return null;
     }
 
     try {
         const currentOrder = await OrderModel.findOneAndUpdate(
-            { id: orderID },
+            { id: orderID, status: 'Confirmed' },
             { $set: {status: 'Finished'} },
             { new: true }
         );
@@ -156,11 +157,33 @@ export async function finishOrder(orderID: number) {
     }
 }
 
+export async function changeOrdersStatus(orders: Order[], givenStatus: String) {
+    if (!orders || !givenStatus) {
+        return;
+    }
+
+    try {
+        let dbPromises = [];
+
+        for (let ord of orders) {
+            dbPromises.push(OrderModel.findOneAndUpdate(
+                { "id": ord.id },
+                { $set: {status: givenStatus} },
+                { new: true }
+            ))
+        }
+
+        await Promise.all(dbPromises);
+    } catch (error) {
+        console.error("Error in archiving the orders: ", error);
+    }
+}
+
 export async function getAllOrders() {
     try {
         const todayStart = getTodayStart();
         const pendingOrders = await PendingOrderModel.find({});
-        const confirmedOrders = await OrderModel.find({ createdAt: {$gte: todayStart} });
+        const confirmedOrders = await OrderModel.find({ status: {$nin: ['Archived', 'Paid']}, createdAt: {$gte: todayStart} });
 
         const allOrders = pendingOrders.concat(confirmedOrders);
         return allOrders;
@@ -177,7 +200,7 @@ export async function getTableOrders(tblID: number) {
 
     try {
         const todayStart = getTodayStart();
-        const tableOrders = await OrderModel.find({ tableID: tblID, createdAt: {$gte: todayStart} });
+        const tableOrders = await OrderModel.find({ tableID: tblID, status: {$nin: ['Archived', 'Paid']}, createdAt: {$gte: todayStart} });
         return tableOrders;
     } catch (error) {
         console.error(`Error in getting orders from table ${tblID}: `, error);
@@ -192,6 +215,25 @@ export async function getBookedTables() {
         return bookedTables ? bookedTables.booked : [];
     } catch (error) {
         console.error("Error in getting the booked tables indexes: ", error);
+        return null;
+    }
+}
+
+export async function freeTable(tableID: number) {
+    if (tableID == null) {
+        return null;
+    }
+
+    try {
+        const leftBooked = await BookedTablesModel.findOneAndUpdate(
+            { name: 'indexes' },
+            { $pull: {booked: tableID} },
+            { new: true }
+        );
+
+        return leftBooked ? leftBooked.booked.length : null;
+    } catch (error) {
+        console.error(`Error in freeing the table ${tableID}: `, error);
         return null;
     }
 }
@@ -235,6 +277,44 @@ export async function updateAnalytics(order: Order, nrBookedTables: number, tota
         );
     } catch (error) {
         console.error("Error in updating order items for analytics: ", error);
+    }
+}
+
+export async function updateOccupationRate(nrBookedTables: number, totalTables: number) {
+    if (nrBookedTables == null || totalTables == null) {
+        return;
+    }
+
+    try {
+        const occupation = (nrBookedTables / totalTables) * 100;
+        const occupationPercent = Math.round(occupation * 100) / 100;
+        const todayStart = getTodayStart();
+
+        await AnalyticsModel.findOneAndUpdate(
+            { createdAt: {$gte: todayStart} },
+            { $set: {occupationRate: occupationPercent} },
+            { new: true, upsert: true }
+        );
+    } catch (error) {
+        console.error("Error in updating the occupation rate: ", error);
+    }
+}
+
+export async function updateTips(tipAmount: number) {
+    if (tipAmount == null) {
+        return;
+    }
+
+    try {
+        const todayStart = getTodayStart();
+
+        await AnalyticsModel.findOneAndUpdate(
+            { createdAt: {$gte:  todayStart} },
+            { $inc: {totalTips: tipAmount} },
+            { new: true, upsert: true }
+        );
+    } catch (error) {
+        console.error("Error in updating the tips: ", error);
     }
 }
 
@@ -290,6 +370,75 @@ export async function getGraphsData() {
     }
 }
 
+export async function addPendingPayment(body: any) {
+    if (!body) {
+        return null;
+    }
+
+    try {
+        const paymentID = await CounterModel.findOneAndUpdate(
+            { name: 'payments' },
+            { $inc: {seq: 1} },
+            { new: true, upsert: true }
+        )
+
+        const tomorrowStart = getNextDayStart();
+        const overmorrowStart = tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+
+        const newPayment: PaymentData = {
+            id: paymentID.seq,
+            status: "Pending",
+            ...body,
+            createdAt: new Date(),
+            expiresAt: overmorrowStart
+        }
+
+        await PaymentModel.create(newPayment);
+        return newPayment;
+    } catch (error) {
+        console.error("Error in saving the pending payment: ", error);
+        return null;
+    }
+}
+
+export async function getAllPayments() {
+    try {
+        const todayStart = getTodayStart();
+        const payments = await PaymentModel.find({ createdAt: {$gte: todayStart} });
+
+        return payments;
+    } catch (error) {
+        console.error("Error in getting the payments: ", error);
+        return null;
+    }
+}
+
+export async function completePayment(paymentID: number) {
+    if (paymentID == null) {
+        return null;
+    }
+
+    try {
+        const todayStart = getTodayStart();
+        const currentPayment = await PaymentModel.findOneAndUpdate(
+            { id: paymentID, createdAt: {$gte: todayStart} },
+            { $set: {status: 'Completed'} },
+            { new: true }
+        )
+
+        if (currentPayment) {
+            const {_id, __v, ...completedPayment} = currentPayment.toObject();
+
+            return completedPayment;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error in completing the payment: ", error);
+        return null;
+    }
+}
+
 // Temporary function for testing purposes
 export async function helperClearDatabases() {
     try {
@@ -299,6 +448,7 @@ export async function helperClearDatabases() {
         await OrderItemAnalyticsModel.deleteMany({});
         await AnalyticsModel.deleteMany({});
         await BookedTablesModel.deleteMany({});
+        await PaymentModel.deleteMany({});
     } catch (error) {
         console.error("Error in cleaning databases: ", error);
     }

@@ -11,6 +11,8 @@ const String tablesUrl = "${API_ROUTE}tables/";
 class TableProvider extends ChangeNotifier {
   int _tableID = 0;
   int get tableID => _tableID;
+  List<OrderModel> _fullOrders = [];
+  List<OrderModel> get fullOrders => _fullOrders;
   List<MapEntry<ItemModel, int>> _previousOrder = [];
   List<MapEntry<ItemModel, int>> get previousOrder => _previousOrder;
 
@@ -29,6 +31,10 @@ class TableProvider extends ChangeNotifier {
       _tableID = scannedID;
 
       if (data is List && data.isEmpty) {
+        _previousOrder = [];
+        _fullOrders = [];
+        notifyListeners();
+
         return false;
       } else {
         if (data is List && data.isNotEmpty) {
@@ -38,6 +44,7 @@ class TableProvider extends ChangeNotifier {
                     OrderModel.fromJson(orderJson as Map<String, dynamic>),
               )
               .toList();
+          _fullOrders = orders;
 
           final Map<ItemModel, int> mergedItems = {};
 
@@ -82,7 +89,7 @@ class TableProvider extends ChangeNotifier {
     return sum;
   }
 
-  void fetchPreviousOrder() async {
+  Future<void> fetchPreviousOrder() async {
     final adminUrl = Uri.parse('$tablesUrl${_tableID.toString()}');
 
     try {
@@ -100,6 +107,7 @@ class TableProvider extends ChangeNotifier {
                   OrderModel.fromJson(orderJson as Map<String, dynamic>),
             )
             .toList();
+        _fullOrders = orders;
 
         final Map<ItemModel, int> mergedItems = {};
 
@@ -126,6 +134,10 @@ class TableProvider extends ChangeNotifier {
         //     .toList();
         _previousOrder = mergedItems.entries.toList();
 
+        notifyListeners();
+      } else {
+        _previousOrder = [];
+        _fullOrders = [];
         notifyListeners();
       }
     } catch (e) {

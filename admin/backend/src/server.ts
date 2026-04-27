@@ -6,7 +6,7 @@ import { Server } from "socket.io";
 
 import * as Database from "./database_provider.js";
 import { sendCustomAnalytics } from "./analytics.js";
-import { Order, AnalyticsData } from "./types.js";
+import { Order, AnalyticsData, PaymentData } from "./types.js";
 
 // Configuration
 dotenv.config();
@@ -155,6 +155,62 @@ app.get("/api/analytics/:fields", async (req, res) => {
 
     let customAnalyticsData: AnalyticsData = await sendCustomAnalytics(fields);
     res.json(customAnalyticsData);
+});
+
+
+app.post("/api/new_payment", async (req, res) => {
+    const newPayment: PaymentData | null = await Database.addPendingPayment(req.body);
+
+    if (!newPayment) {
+        return res.status(400).json({ message: "Failed to initiate payment" });
+    }
+
+    await Database.changeOrdersStatus(newPayment.orders, 'Archived');
+
+    const leftBooked: number | null = await Database.freeTable(newPayment.tableID);
+
+    if (leftBooked == null) {
+        return res.status(404).json({ message: "Table to be freed not found" });
+    }
+
+    await Database.updateOccupationRate(leftBooked, NR_TABLES);
+
+    io.emit("newPayment", newPayment);
+
+    console.log("New payment received:", newPayment);
+    return res.status(201).json({ message: "New payment received" , payment: newPayment});
+})
+
+
+app.get("/api/payments", async (_, res) => {
+    const allPayments = await Database.getAllPayments();
+
+    if (!allPayments) {
+        return res.status(400).json({ message: "Failed to get all payments" });
+    }
+
+    return res.json(allPayments);
+})
+
+
+app.put("/api/payments/:id", async (req, res) => {
+    const paymentID = parseInt(req.params.id);
+    const { newStatus } = req.body;
+
+    if (newStatus === 'Completed') {
+        const completedPayment: PaymentData | null = await Database.completePayment(paymentID);
+
+        if (!completedPayment) {
+            return res.status(404).json({ message: "Payment to be completed not found" });
+        }
+
+        await Database.changeOrdersStatus(completedPayment.orders, 'Paid');
+        await Database.updateTips(completedPayment.totalTips);
+
+        io.emit("paymentCompleted", completedPayment);
+
+        return res.json({ message: "Payment completed", completedPayment });
+    }
 });
 
 

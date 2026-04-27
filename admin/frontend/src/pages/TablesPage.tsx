@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Order } from "../utils/types.ts";
+import { Order, PaymentData } from "../utils/types.ts";
 import { BASE_URL, socket } from "../utils/routes.ts";
 import GridMap from "../components/GridMap.tsx";
 import SideOrder from "../components/SideOrder.tsx";
@@ -59,14 +59,32 @@ function TablesPage () {
                     })
                 );
             }
-        }
+        };
+
+        const handleNewPayment = (newPayment: PaymentData) => {
+            setBookesTables(prev => prev.filter(tblId => tblId !== newPayment.tableID));
+
+            if (newPayment.tableID === tableID) {
+                setOrders((prev) => {
+                    if (!prev) {
+                        return [];
+                    }
+
+                    const paidOrdersIds = newPayment.orders.map(ord => ord.id);
+                    const unpaidOrders = prev.filter(ord => !paidOrdersIds.includes(ord.id));
+                    return unpaidOrders;
+                })
+            }
+        };
 
         socket.on("orderConfirmed", handleOrderConfirmed);
         socket.on("orderFinished", handleOrderFinished);
+        socket.on("newPayment", handleNewPayment);
 
         return () => {
             socket.off("orderConfirmed", handleOrderConfirmed);
             socket.off("orderFinished", handleOrderFinished);
+            socket.off("newPayment", handleNewPayment);
         };
     }, [tableID]);
 
