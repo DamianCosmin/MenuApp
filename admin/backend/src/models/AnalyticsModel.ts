@@ -17,7 +17,7 @@ const analyticsSchema = new Schema({
         type: Number,
         required: true,
         default: 0,
-        set: (rev: number) => Math.round(rev * 100) / 100,
+        set: (tip: number) => Math.round(tip * 100) / 100,
     },
     totalItems: {
         type: Number,

@@ -22,29 +22,31 @@ function PaymentsPage() {
         setShowCompleted(!showCompleted);
     }
 
+    const handleNewPayment = (payment: PaymentData) => {
+        setPayments(prev => prev ? [payment, ...prev] : [payment]);
+    }
+
+    const handlePaymentCompleted = (completedPayment: PaymentData) => {
+        setPayments(prev => {
+            if (!prev) {
+                return [];
+            }
+
+            const otherPayments = prev.filter(p => !(p.id === completedPayment.id && p.status === 'Pending'));
+
+            return [...otherPayments, completedPayment];
+        });
+    }
+
     useEffect(() => {
         fetchPayments();
         
-        // TO-DO: format all the functions here in the same format as in TablesPage.tsx
-        socket.on("newPayment", (payment) => {
-            setPayments(prev => prev ? [payment, ...prev] : [payment]);
-        });
-
-        socket.on("paymentCompleted", (completedPayment) => {
-            setPayments(prev => {
-                if (!prev) {
-                    return [];
-                }
-
-                const otherPayments = prev.filter(p => !(p.id === completedPayment.id && p.status === 'Pending'));
-
-                return [...otherPayments, completedPayment];
-            });
-        });
+        socket.on("newPayment", handleNewPayment);
+        socket.on("paymentCompleted", handlePaymentCompleted);
 
         return () => {
-            socket.off("newPayment");
-            socket.off("paymentCompleted");
+            socket.off("newPayment", handleNewPayment);
+            socket.off("paymentCompleted", handlePaymentCompleted);
         }
     }, [])
 

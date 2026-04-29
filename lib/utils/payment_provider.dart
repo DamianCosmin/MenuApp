@@ -41,7 +41,7 @@ class PaymentProvider extends ChangeNotifier {
 
           if (response.statusCode == 200 || response.statusCode == 201) {
             final data = jsonDecode(response.body);
-            print('Payment data from server: $data');
+            // print('Payment data from server: $data');
 
             return true;
           }

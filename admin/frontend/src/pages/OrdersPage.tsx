@@ -22,60 +22,65 @@ function OrdersPage() {
         setShowFinished(!showFinished);
     }
 
+    const handleNewOrder = (order: Order) => {
+        setOrders(prev => prev ? [order, ...prev] : [order]);
+    }
+
+    const handleOrderConfirmed = ({updatedOrder, pendingId, _}: {updatedOrder: Order, pendingId: number, _: number[]}) => {
+        setOrders(prev => {
+            if (!prev) {
+                return [];
+            }
+
+            const otherOrders = prev.filter(o => !(o.id === pendingId && o.status === 'Pending'));
+
+            return [...otherOrders, updatedOrder];
+        });
+    }
+
+    const handleOrderDeleted = (deletedOrder: Order) => {
+        setOrders(prev => prev ? prev.filter(o => !(o.id === deletedOrder.id && o.status === 'Pending')) : []);
+    }
+
+    const handleOrderFinished = (finishedOrder: Order) => {
+        setOrders(prev => {
+            if (!prev) {
+                return [];
+            }
+
+            const otherOrders = prev.filter(o => !(o.id === finishedOrder.id && o.status === 'Confirmed'));
+
+            return [...otherOrders, finishedOrder];
+        })
+    }
+
+    const handleNewPayment = (newPayment: PaymentData) => {
+        setOrders(prev => {
+            if (!prev) {
+                return [];
+            }
+
+            const paidOrdersIds = newPayment.orders.map(ord => ord.id);
+            const unpaidOrders = prev.filter(ord => !paidOrdersIds.includes(ord.id));
+            return unpaidOrders;
+        })
+    }
+
     useEffect(() => {
         fetchOrders();
 
-        // TO-DO: format all the functions here in the same format as in TablesPage.tsx
-        socket.on("newOrder", (order: Order) => {
-            setOrders(prev => prev ? [order, ...prev] : [order]);
-        });
-
-        socket.on("orderConfirmed", ({updatedOrder, pendingId, _}: {updatedOrder: Order, pendingId: number, _: number[]}) => {
-            setOrders(prev => {
-                if (!prev) {
-                    return [];
-                }
-
-                const otherOrders = prev.filter(o => !(o.id === pendingId && o.status === 'Pending'));
-
-                return [...otherOrders, updatedOrder];
-            });
-        });
-
-        socket.on("orderDeleted", (deletedOrder: Order) => {
-            setOrders(prev => prev ? prev.filter(o => !(o.id === deletedOrder.id && o.status === 'Pending')) : []);
-        });
-
-        socket.on("orderFinished", (finishedOrder: Order) => {
-            setOrders(prev => {
-                if (!prev) {
-                    return [];
-                }
-
-                const otherOrders = prev.filter(o => !(o.id === finishedOrder.id && o.status === 'Confirmed'));
-
-                return [...otherOrders, finishedOrder];
-            })
-        });
-
-        socket.on("newPayment", (newPayment: PaymentData) => {
-            setOrders(prev => {
-                if (!prev) {
-                    return [];
-                }
-
-                const paidOrdersIds = newPayment.orders.map(ord => ord.id);
-                const unpaidOrders = prev.filter(ord => !paidOrdersIds.includes(ord.id));
-                return unpaidOrders;
-            })
-        })
+        socket.on("newOrder", handleNewOrder);
+        socket.on("orderConfirmed", handleOrderConfirmed);
+        socket.on("orderDeleted", handleOrderDeleted);
+        socket.on("orderFinished", handleOrderFinished);
+        socket.on("newPayment", handleNewPayment)
 
         return () => {
-            socket.off("newOrder");
-            socket.off("orderConfirmed");
-            socket.off("orderDeleted");
-            socket.off("orderFinished");
-            socket.off("newPayment");
+            socket.off("newOrder", handleNewOrder);
+            socket.off("orderConfirmed", handleOrderConfirmed);
+            socket.off("orderDeleted", handleOrderDeleted);
+            socket.off("orderFinished", handleOrderFinished);
+            socket.off("newPayment", handleNewPayment);
         };
     }, []);
 

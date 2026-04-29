@@ -133,6 +133,10 @@ class HomePageState extends State<HomePage>
     void viewCategory(int index) {
       final page = categoriesPages[index] ?? const NotFoundPage();
 
+      if (showOptions) {
+        handleOptions();
+      }
+
       Navigator.push(context, MaterialPageRoute(builder: (context) => page));
     }
 
