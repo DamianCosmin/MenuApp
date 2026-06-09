@@ -6,6 +6,7 @@ import OrdersPage from './pages/OrdersPage.tsx';
 import TablesPage from './pages/TablesPage.tsx';
 import AnalyticsPage from './pages/AnalyticsPage.tsx';
 import PaymentsPage from './pages/PaymentsPage.tsx';
+import SignUpPage from './pages/SignUpPage.tsx';
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                 <Route path="/analytics" element={<AnalyticsPage />} />
                 <Route path="/payments" element={<PaymentsPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/sign-up" element={<SignUpPage />} />
             </Routes>
         </Router>
     );

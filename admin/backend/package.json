@@ -9,6 +9,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@clerk/express": "^2.1.23",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",

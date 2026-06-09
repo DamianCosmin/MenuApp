@@ -22,6 +22,10 @@ function LoginPage() {
                     <label htmlFor="floatingPassword">Password</label>
                 </div>
 
+                <p>
+                    Don't have an account? Create one <a href='/sign-up' className="text-decoration-none text-revenue">here</a>.
+                </p>
+
                 <button className="btn btn-lg btn-login rounded-pill px-5" type="submit" value="Submit" onMouseUp={(e) => e.currentTarget.blur()}>LOGIN</button>  
             </div>
         </div>
