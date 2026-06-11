@@ -3,7 +3,7 @@ import { useClerk, useAuth } from '@clerk/react';
 
 function Navbar() {
     const { signOut } = useClerk();
-    const { isSignedIn, sessionId } = useAuth();
+    const { isSignedIn, sessionId, isLoaded } = useAuth();
     const navigate = useNavigate();
 
     const handleSignOut = async () => {
@@ -13,6 +13,14 @@ function Navbar() {
                 { sessionId: sessionId }
             );
         }
+    }
+
+    if (!isLoaded) {
+        return (
+            <nav className="navbar navbar-expand-lg fixed-top navbar-orange text-white px-4">
+                <NavLink className="navbar-brand fs-3" to="/">MenuApp</NavLink>
+            </nav>
+        );
     }
 
     return (
