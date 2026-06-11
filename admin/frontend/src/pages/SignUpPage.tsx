@@ -14,7 +14,12 @@ function SignUpPage() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const handleSignUp = async () => {
+    const handleSignUp = async (e: React.FormEvent) => {
+        if (signIn == null) {
+            return;
+        }
+        
+        e.preventDefault();
         setError("");
         setLoading(true);
 
@@ -28,16 +33,24 @@ function SignUpPage() {
             const data = await response.json();
             if (!response.ok) {
                 setError(data.message);
-                setLoading(false);
                 return;
             }
 
-            const result = await signIn.create({ identifier: email, password }) as any;
-            if (result.status === 'complete') {
-                navigate('/');
+            const { clerkError } = await signIn.ticket({
+                ticket: data.token
+            }) as any;
+
+            if (clerkError) {
+                setError(clerkError.errors[0]?.longMessage);
+                return;
+            }
+
+            if (signIn.status === 'complete') {
+                await signIn.finalize();
+                navigate("/");
             }
         } catch(error) {
-            setError('Something wrong happened!');
+            setError("Something wrong happened!");
         } finally {
             setLoading(false);
         }
@@ -93,7 +106,7 @@ function SignUpPage() {
                 {error && <p className="text-danger">{error}</p>}
 
                 <button
-                    className="btn btn-lg btn-login rounded-pill px-5 mt-3" type="submit" value="Submit"
+                    className="btn btn-lg btn-login rounded-pill px-5 mt-3"
                     onClick={handleSignUp}
                     disabled={loading}
                     onMouseUp={(e) => e.currentTarget.blur()}

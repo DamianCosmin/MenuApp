@@ -53,3 +53,10 @@ export interface PaymentData {
     tableID: number;
     orders: Order[];
 }
+
+export interface User {
+    clerkUserId: string;
+    email: string;
+    createdAt: Date;
+    lastLogin: Date;
+}

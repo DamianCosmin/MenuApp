@@ -8,6 +8,9 @@ import * as Database from "./database_provider.js";
 import { sendCustomAnalytics } from "./analytics.js";
 import { Order, AnalyticsData, PaymentData } from "./types.js";
 
+import { clerkMiddleware } from "@clerk/express";
+import authRouter from "./auth.js";
+
 // Configuration
 dotenv.config();
 
@@ -19,6 +22,8 @@ const NR_TABLES = 23;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(clerkMiddleware());
+app.use("/api/auth", authRouter);
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {

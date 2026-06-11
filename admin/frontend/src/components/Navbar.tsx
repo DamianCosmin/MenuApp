@@ -1,6 +1,20 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useClerk, useAuth } from '@clerk/react';
 
 function Navbar() {
+    const { signOut } = useClerk();
+    const { isSignedIn, sessionId } = useAuth();
+    const navigate = useNavigate();
+
+    const handleSignOut = async () => {
+        if (sessionId != null) {
+            await signOut(
+                () => navigate("/login"),
+                { sessionId: sessionId }
+            );
+        }
+    }
+
     return (
         <nav className="navbar navbar-expand-lg fixed-top navbar-orange text-white px-4">
             <NavLink className="navbar-brand fs-3" to="/">MenuApp</NavLink>
@@ -23,9 +37,18 @@ function Navbar() {
                     <li className="nav-item fs-5">
                         <NavLink className={({ isActive }) => "nav-link " + (isActive ? "nav-link-active" : "")} to="/payments">Payments</NavLink>
                     </li>
-                    <li className="nav-item fs-5">
-                        <NavLink className={({ isActive }) => "nav-link " + (isActive ? "nav-link-active" : "")} to="/login">Login</NavLink>
-                    </li>
+
+                    {!isSignedIn &&
+                        <li className="nav-item fs-5">
+                            <NavLink className={({ isActive }) => "nav-link " + (isActive ? "nav-link-active" : "")} to="/login">Login</NavLink>
+                        </li>
+                    }
+
+                    {isSignedIn && (
+                        <li className="nav-item fs-5">
+                            <button className="nav-link" onClick={handleSignOut}>Logout</button>
+                        </li>
+                    )}
                 </ul>
             </div>
         </nav>
