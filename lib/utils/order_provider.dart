@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:food_app/utils/item_model.dart';
 import 'package:food_app/utils/routes.dart';
 import 'package:food_app/utils/socket_service.dart';
+import 'package:food_app/utils/env_service.dart';
 
 class OrderProvider extends ChangeNotifier {
   final Map<ItemModel, int> _currentOrder = {};
@@ -64,7 +65,10 @@ class OrderProvider extends ChangeNotifier {
       try {
         final response = await http.post(
           adminUrl,
-          headers: {"Content-Type": "application/json"},
+          headers: {
+            "Content-Type": "application/json",
+            "flutter-secret": EnvService.flutterSecret,
+          },
           body: jsonEncode({
             "tableID": table,
             "items": itemsList,

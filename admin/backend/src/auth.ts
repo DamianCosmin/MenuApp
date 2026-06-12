@@ -1,9 +1,14 @@
-import express from "express";
-import { clerkClient } from "@clerk/express";
+import { Router, Request, Response, NextFunction } from 'express';
+import { clerkClient, getAuth } from "@clerk/express";
 import * as Database from "./database_provider.js";
 import { User } from "./types.js";
 
-const router = express.Router();
+const router = Router();
+
+export interface AuthRequest extends Request {
+    clientType?: 'mobile' | 'admin';
+    userId?: string;
+}
 
 router.post("/sign-up", async (req, res) => {
     const {email, password, secretKey} = req.body;
@@ -60,5 +65,24 @@ router.post("/login", async (req, res) => {
         res.status(400).json({ message: "Failed to update the login date!" });
     }
 });
+
+export const requireCustomAuth = (req: AuthRequest, res: Response, next: NextFunction) => {
+    const flutterSecret = req.headers["flutter-secret"];
+
+    if (flutterSecret && flutterSecret === process.env.FLUTTER_KEY) {
+        req.clientType = 'mobile';
+        return next();
+    }
+    
+    const auth = getAuth(req);
+
+    if (auth.userId) {
+        req.clientType = 'admin';
+        req.userId = auth.userId;
+        return next();
+    }
+
+    return res.status(401).json({ message: "Unauthorized!" });
+}
 
 export default router;

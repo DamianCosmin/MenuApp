@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { createServer } from "http";
@@ -9,14 +9,13 @@ import { sendCustomAnalytics } from "./analytics.js";
 import { Order, AnalyticsData, PaymentData } from "./types.js";
 
 import { clerkMiddleware } from "@clerk/express";
-import authRouter from "./auth.js";
+import authRouter, { requireCustomAuth, AuthRequest } from "./auth.js";
 
 // Configuration
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5050;
-const API_URL = process.env.API_URL || "http://127.0.0.1/api";
 const NR_TABLES = 23;
 
 // Middleware
@@ -47,7 +46,7 @@ io.on("connection", (socket) => {
 });
 
 // Routes
-app.post("/api/new_order", async (req, res) => {
+app.post("/api/new_order", requireCustomAuth, async (req: AuthRequest, res: Response) => {
     const newOrder: Order | null = await Database.addPendingOrder(req.body);
 
     if (!newOrder) {
@@ -61,7 +60,7 @@ app.post("/api/new_order", async (req, res) => {
 });
 
 
-app.get("/api/orders", async (_, res) => {
+app.get("/api/orders", requireCustomAuth, async (_: AuthRequest, res: Response) => {
     const allOrders: Order[] | null = await Database.getAllOrders();
 
     if (!allOrders) {
@@ -72,8 +71,8 @@ app.get("/api/orders", async (_, res) => {
 });
 
 
-app.put("/api/orders/:id", async (req, res) => {
-    const orderID = parseInt(req.params.id);
+app.put("/api/orders/:id", requireCustomAuth, async (req: AuthRequest, res: Response) => {
+    const orderID = parseInt(req.params.id as string, 10);
     const { newStatus } = req.body;
 
     if (newStatus === 'Confirmed') {
@@ -113,8 +112,8 @@ app.put("/api/orders/:id", async (req, res) => {
 });
 
 
-app.delete("/api/orders/:id", async (req, res) => {
-    const orderID = parseInt(req.params.id);
+app.delete("/api/orders/:id", requireCustomAuth, async (req: AuthRequest, res: Response) => {
+    const orderID = parseInt(req.params.id as string, 10);
     const deletedOrder: Order | null = await Database.deletePendingOrder(orderID);
 
     if (!deletedOrder) {
@@ -128,42 +127,42 @@ app.delete("/api/orders/:id", async (req, res) => {
 });
 
 
-app.get("/api/tables/indexes", async (_, res) => {
+app.get("/api/tables/indexes", requireCustomAuth, async (_: AuthRequest, res: Response) => {
     const bookedTables: Number[] | null = await Database.getBookedTables();
     res.json(bookedTables);
 })
 
 
-app.get("/api/tables/:tblId", async (req, res) => {
-    const givenTable = parseInt(req.params.tblId);
+app.get("/api/tables/:tblId", requireCustomAuth, async (req: AuthRequest, res: Response) => {
+    const givenTable = parseInt(req.params.tblId as string, 10);
 
     const tableOrders: Order[] | null = await Database.getTableOrders(givenTable);
     res.json(tableOrders);
 });
 
 
-app.get("/api/analytics/graphs", async (req, res) => {
+app.get("/api/analytics/graphs", requireCustomAuth, async (_: AuthRequest, res: Response) => {
     // createdAt field is needed, so we do not cast to AnalyticsData
     let graphsData = await Database.getGraphsData();
     res.json(graphsData);
 })
 
 
-app.get("/api/analytics", async (_, res) => {
+app.get("/api/analytics", requireCustomAuth, async (_: AuthRequest, res: Response) => {
     let customAnalyticsData: AnalyticsData = await sendCustomAnalytics(["ALL"]);
     res.json(customAnalyticsData);
 });
 
 
-app.get("/api/analytics/:fields", async (req, res) => {
-    const fields: string[] = req.params.fields.split(",");
+app.get("/api/analytics/:fields", requireCustomAuth, async (req: AuthRequest, res: Response) => {
+    const fields: string[] = (req.params.fields as string).split(",");
 
     let customAnalyticsData: AnalyticsData = await sendCustomAnalytics(fields);
     res.json(customAnalyticsData);
 });
 
 
-app.post("/api/new_payment", async (req, res) => {
+app.post("/api/new_payment", requireCustomAuth, async (req: AuthRequest, res: Response) => {
     const newPayment: PaymentData | null = await Database.addPendingPayment(req.body);
 
     if (!newPayment) {
@@ -187,7 +186,7 @@ app.post("/api/new_payment", async (req, res) => {
 })
 
 
-app.get("/api/payments", async (_, res) => {
+app.get("/api/payments", requireCustomAuth, async (_: AuthRequest, res: Response) => {
     const allPayments = await Database.getAllPayments();
 
     if (!allPayments) {
@@ -198,8 +197,8 @@ app.get("/api/payments", async (_, res) => {
 })
 
 
-app.put("/api/payments/:id", async (req, res) => {
-    const paymentID = parseInt(req.params.id);
+app.put("/api/payments/:id", requireCustomAuth, async (req: AuthRequest, res: Response) => {
+    const paymentID = parseInt(req.params.id as string, 10);
     const { newStatus } = req.body;
 
     if (newStatus === 'Completed') {

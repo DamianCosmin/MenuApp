@@ -4,6 +4,7 @@ import { Order, PaymentData } from "../utils/types.ts";
 import { BASE_URL, socket } from "../utils/routes.ts";
 import GridMap from "../components/GridMap.tsx";
 import SideOrder from "../components/SideOrder.tsx";
+import { useAuthFetch } from "../utils/useAuthFetch.ts";
 
 const tableMap = [
   [1, 2, 3, null, 4, 5, 6],
@@ -16,9 +17,10 @@ function TablesPage () {
     const [tableID, setTableID] = useState<number | null>(null);
     const [bookedTables, setBookesTables] = useState<number[]>([]);
     const [orders, setOrders] = useState<Order[]>([]);
+    const authFetch = useAuthFetch();
 
     const fetchBookedTables = async () => {
-        const res = await fetch(`${BASE_URL}/api/tables/indexes`);
+        const res = await authFetch(`${BASE_URL}/api/tables/indexes`);
         const data = await res.json();
         
         setBookesTables(data);
@@ -28,7 +30,7 @@ function TablesPage () {
         const fetchTableOrders = async (tableIndex: number | null) => {
             if (!tableIndex) return;
 
-            const res = await fetch(`${BASE_URL}/api/tables/${tableIndex}`);
+            const res = await authFetch(`${BASE_URL}/api/tables/${tableIndex}`);
             const data = await res.json();
 
             setOrders(data);

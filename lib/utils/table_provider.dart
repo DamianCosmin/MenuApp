@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:food_app/utils/routes.dart';
 import 'package:food_app/utils/item_model.dart';
 import 'package:food_app/utils/order_model.dart';
+import 'package:food_app/utils/env_service.dart';
 
 const String tablesUrl = "${API_ROUTE}tables/";
 
@@ -23,7 +24,10 @@ class TableProvider extends ChangeNotifier {
     try {
       final response = await http.get(
         adminUrl,
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "flutter-secret": EnvService.flutterSecret,
+        },
       );
 
       final data = jsonDecode(response.body);
@@ -95,7 +99,10 @@ class TableProvider extends ChangeNotifier {
     try {
       final response = await http.get(
         adminUrl,
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "flutter-secret": EnvService.flutterSecret,
+        },
       );
 
       final data = jsonDecode(response.body);

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:food_app/utils/order_model.dart';
 import 'package:food_app/utils/routes.dart';
+import 'package:food_app/utils/env_service.dart';
 
 class PaymentProvider extends ChangeNotifier {
   Future<bool> sendPaymentToAdmin(
@@ -29,7 +30,10 @@ class PaymentProvider extends ChangeNotifier {
         try {
           final response = await http.post(
             adminUrl,
-            headers: {"Content-Type": "application/json"},
+            headers: {
+              "Content-Type": "application/json",
+              "flutter-secret": EnvService.flutterSecret,
+            },
             body: jsonEncode({
               "totalAmount": double.parse(total.toStringAsFixed(2)),
               "totalTips": double.parse(tips.toStringAsFixed(2)),
