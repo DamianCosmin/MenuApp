@@ -53,8 +53,7 @@ Designed to offer a polished experience and instant visual feedback on users' or
 - ✅ Order tracking on admin panel
 - ✅ Integration with a scalable & reliable database
 - ✅ Analytics dashboard on the panel
-- 🔜 Secure login system for admins
-- 🔜 In-app payment functionalities
+- ✅ Secure login system for admins powered by [Clerk](https://clerk.com)
 
 
 ## Author
