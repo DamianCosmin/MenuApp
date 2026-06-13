@@ -5,7 +5,8 @@ import { OrderItemAnalyticsModel } from "./models/OrderItemModel.js";
 import { AnalyticsModel } from "./models/AnalyticsModel.js";
 import { BookedTablesModel } from "./models/BookedTablesModel.js";
 import { PaymentModel } from "./models/PaymentModel.js";
-import { Order, PaymentData } from "./types.js";
+import { UserModel } from "./models/UserModel.js";
+import { Order, PaymentData, User } from "./types.js";
 
 export function getTodayStart() {
     const midnight = new Date();
@@ -73,7 +74,7 @@ export async function addPendingOrder(body: any) {
     }
 }
 
-export async function deletePendingOrder(orderID: Number) {
+export async function deletePendingOrder(orderID: number) {
     if (orderID == null) {
         return null;
     }
@@ -435,6 +436,51 @@ export async function completePayment(paymentID: number) {
         }
     } catch (error) {
         console.error("Error in completing the payment: ", error);
+        return null;
+    }
+}
+
+export async function createAdminUser(clerkId: string, email: string) {
+    if (clerkId == null || email == null) {
+        return null;
+    }
+
+    try {
+        const newUser: User = {
+            clerkUserId: clerkId,
+            email: email,
+            createdAt: new Date(),
+            lastLogin: new Date()
+        }
+
+        await UserModel.create(newUser);
+        return newUser;
+    } catch (error) {
+        console.error("Error in saving the user: ", error);
+        return null;
+    }
+}
+
+export async function updateUserLoginDate(email: string) {
+    if (email == null) {
+        return null;
+    }
+
+    try {
+        const result = await UserModel.findOneAndUpdate(
+            { email: email },
+            { $set: {lastLogin: new Date()} },
+            { new: true }
+        );
+
+        if (result) {
+            const {_id, __v, ...user} = result.toObject();
+            return user;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error(`Error in updating the login date for user ${email}: `, error);
         return null;
     }
 }

@@ -3,6 +3,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 import 'package:food_app/utils/style.dart';
@@ -24,7 +25,10 @@ import 'package:food_app/windows/features.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+
   runApp(
     MultiProvider(
       providers: [
@@ -75,7 +79,11 @@ class HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    context.read<TableProvider>().setTableID(16); // Added to skip QR reading
+
+    // Added to skip QR reading
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<TableProvider>().setTableID(16);
+    });
 
     mainOptionsAnimationController = AnimationController(
       vsync: this,

@@ -1,14 +1,17 @@
 import { Order } from "../utils/types.ts";
 import { BASE_URL } from "../utils/routes.ts";
+import { useAuthFetch } from "../utils/useAuthFetch.ts";
 
 type OrderProps = {
     order: Order,
 }
 
 function OrderCard({order}: OrderProps) {
+    const authFetch = useAuthFetch();
+
     const confirmOrder = async () => {
         try {
-            const response = await fetch(`${BASE_URL}/api/orders/${order.id}`, {
+            const response = await authFetch(`${BASE_URL}/api/orders/${order.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ newStatus: "Confirmed" }),
@@ -24,7 +27,7 @@ function OrderCard({order}: OrderProps) {
 
     const deleteOrder = async () => {
         try {
-            const response = await fetch(`${BASE_URL}/api/orders/${order.id}`, {
+            const response = await authFetch(`${BASE_URL}/api/orders/${order.id}`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
             });
@@ -39,7 +42,7 @@ function OrderCard({order}: OrderProps) {
 
     const finishOrder = async () => {
         try {
-            const response = await fetch(`${BASE_URL}/api/orders/${order.id}`, {
+            const response = await authFetch(`${BASE_URL}/api/orders/${order.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ newStatus: "Finished" }),

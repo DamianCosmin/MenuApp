@@ -1,16 +1,18 @@
 import { PaymentData } from "../utils/types.ts";
 import { BASE_URL } from "../utils/routes.ts";
 import { mergeOrderItems } from "../components/SideOrder.tsx";
+import { useAuthFetch } from "../utils/useAuthFetch.ts";
 
 type PaymentProps = {
     payData: PaymentData,
 }
 
 function PaymentCard({payData}: PaymentProps) {
+    const authFetch = useAuthFetch()
     
     const completePayment = async () => {
         try {
-            const response = await fetch(`${BASE_URL}/api/payments/${payData.id}`, {
+            const response = await authFetch(`${BASE_URL}/api/payments/${payData.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ newStatus: "Completed" }),

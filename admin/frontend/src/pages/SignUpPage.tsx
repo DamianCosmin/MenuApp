@@ -4,16 +4,17 @@ import { useSignIn } from "@clerk/react";
 import { BsPersonCircle } from "react-icons/bs";
 import { BASE_URL } from "../utils/routes";
 
-function LoginPage() {
+function SignUpPage() {
     const { signIn } = useSignIn();
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [secretKey, setSecretKey] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleSignUp = async (e: React.FormEvent) => {
         if (signIn == null) {
             return;
         }
@@ -23,23 +24,28 @@ function LoginPage() {
         setLoading(true);
 
         try {
-            const { error: clerkError } = await signIn.password({
-                emailAddress: email,
-                password: password
+            const response = await fetch(`${BASE_URL}/api/auth/sign-up`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password, secretKey}),
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                setError(data.message);
+                return;
+            }
+
+            const { clerkError } = await signIn.ticket({
+                ticket: data.token
             }) as any;
-            
+
             if (clerkError) {
                 setError(clerkError.errors[0]?.longMessage);
                 return;
             }
 
             if (signIn.status === 'complete') {
-                await fetch(`${BASE_URL}/api/auth/login`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email }),
-                });
-
                 await signIn.finalize();
                 navigate("/");
             }
@@ -85,23 +91,31 @@ function LoginPage() {
                     <label htmlFor="floatingPassword">Password</label>
                 </div>
 
+                <div className="form-floating mb-3 input-field">
+                    <input 
+                        type="text"
+                        className="form-control"
+                        id="floatingSecret"
+                        placeholder="Secret key"
+                        value={secretKey}
+                        onChange={e => setSecretKey(e.target.value)}
+                    />
+                    <label htmlFor="floatingSecret">Secret admin key</label>
+                </div>
+
                 {error && <p className="text-danger">{error}</p>}
 
-                <p>
-                    Don't have an account? Create one <a href='/sign-up' className="text-decoration-none text-revenue">here</a>.
-                </p>
-
-                <button 
-                    className="btn btn-lg btn-login rounded-pill px-5"
-                    onClick={handleLogin}
+                <button
+                    className="btn btn-lg btn-login rounded-pill px-5 mt-3"
+                    onClick={handleSignUp}
                     disabled={loading}
                     onMouseUp={(e) => e.currentTarget.blur()}
                 >
-                    {loading ? "SINGING IN.." : "LOGIN"}
+                    {loading ? "CREATING.." : "SIGN UP"}
                 </button>  
             </div>
         </div>
     );
 }
 
-export default LoginPage;
+export default SignUpPage;

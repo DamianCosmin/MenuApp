@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { BiSolidMedal } from 'react-icons/bi';
 import { BASE_URL } from '../utils/routes.ts';
 import { AnalyticsData, OrdersGraphData, RevenueGraphData } from '../utils/types.ts';
+import { useAuthFetch } from '../utils/useAuthFetch.ts';
 
 const primaryButtons = ["ALL", "MAINS", "DRINKS"];
 const secondaryButtons = ["BURGERS", "PIZZA", "PASTA", "COFFEE", "SOFTDRINKS", "WINES", "DESSERTS"];
@@ -25,6 +26,7 @@ function AnalyticsPage() {
     const [revenueGraphData, setRevenueGraphData] = useState<RevenueGraphData[]>([]);
 
     const [loading, setLoading] = useState(false);
+    const authFetch = useAuthFetch();
 
     const handlePrimaryButtons = (button: "ALL" | "MAINS" | "DRINKS") => {
         setPrimary(button);
@@ -51,7 +53,7 @@ function AnalyticsPage() {
     }
 
     const fetchCustomAnalyticsData = async (categories: string[]) => {
-        const res = await fetch(`${BASE_URL}/api/analytics/${categories.toString()}`);
+        const res = await authFetch(`${BASE_URL}/api/analytics/${categories.toString()}`);
         const analytics = await res.json() as AnalyticsData;
         console.log(analytics);
 
@@ -68,7 +70,7 @@ function AnalyticsPage() {
     };
 
     const fetchGraphsData = async () => {
-        const res = await fetch(`${BASE_URL}/api/analytics/graphs`);
+        const res = await authFetch(`${BASE_URL}/api/analytics/graphs`);
         const data = await res.json();
 
         console.log(data);

@@ -3,14 +3,17 @@ import { useState, useEffect } from "react";
 import { BASE_URL, socket } from "../utils/routes.ts";
 import PaymentCard from "../components/PaymentCard.tsx";
 import { PaymentData } from "../utils/types.ts";
+import { useAuth } from "@clerk/react";
+import { useAuthFetch } from "../utils/useAuthFetch.ts";
 
 function PaymentsPage() {
     const [payments, setPayments] = useState<PaymentData[]>([]);
     const [showCompleted, setShowCompleted] = useState<boolean>(false);
+    const authFetch = useAuthFetch();
 
     const fetchPayments = async () => {
         try {
-            const res = await fetch(`${BASE_URL}/api/payments`);
+            const res = await authFetch(`${BASE_URL}/api/payments`);
             const data: PaymentData[] = await res.json();
             setPayments(data);
         } catch (err) {

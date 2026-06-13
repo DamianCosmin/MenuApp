@@ -3,14 +3,16 @@ import { useState, useEffect } from "react";
 import { BASE_URL, socket } from "../utils/routes.ts";
 import OrderCard from "../components/OrderCard.tsx";
 import { Order, PaymentData } from "../utils/types.ts";
+import { useAuthFetch } from "../utils/useAuthFetch.ts";
 
 function OrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [showFinished, setShowFinished] = useState<boolean>(false);
+    const authFetch = useAuthFetch();
 
     const fetchOrders = async () => {
         try {
-            const res = await fetch(`${BASE_URL}/api/orders`);
+            const res = await authFetch(`${BASE_URL}/api/orders`);
             const data: Order[] = await res.json();
             setOrders(data);
         } catch (err) {
