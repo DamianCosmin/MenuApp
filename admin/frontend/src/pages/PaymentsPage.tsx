@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { BASE_URL, socket } from "../utils/routes.ts";
 import PaymentCard from "../components/PaymentCard.tsx";
 import { PaymentData } from "../utils/types.ts";
-import { useAuth } from "@clerk/react";
 import { useAuthFetch } from "../utils/useAuthFetch.ts";
 
 function PaymentsPage() {

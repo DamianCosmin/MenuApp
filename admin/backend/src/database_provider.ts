@@ -55,7 +55,7 @@ export async function addPendingOrder(body: any) {
         const pendingID = await CounterModel.findOneAndUpdate(
             { name: 'pending' },
             { $inc: {seq: 1} },
-            { new: true, upsert: true}
+            { returnDocument: 'after', upsert: true}
         )
 
         const newOrder: Order = {
@@ -103,7 +103,7 @@ export async function addOrderToDB(orderID: number) {
             const confirmedID = await CounterModel.findOneAndUpdate(
                 { name: 'confirmed' },
                 { $inc: {seq: 1} },
-                { new: true, upsert: true}
+                { returnDocument: 'after', upsert: true}
             )
             
             const previousID = orderData.id;
@@ -116,7 +116,7 @@ export async function addOrderToDB(orderID: number) {
             const bookedResult = await BookedTablesModel.findOneAndUpdate(
                 { name: 'indexes'},
                 { $addToSet: {booked: orderData.tableID} },
-                { upsert: true, new: true }
+                { returnDocument: 'after', upsert: true }
             );
 
             if (!bookedResult) {
@@ -142,7 +142,7 @@ export async function finishOrder(orderID: number) {
         const currentOrder = await OrderModel.findOneAndUpdate(
             { id: orderID, status: 'Confirmed' },
             { $set: {status: 'Finished'} },
-            { new: true }
+            { returnDocument: 'after' }
         );
 
         if (currentOrder) {
@@ -170,7 +170,7 @@ export async function changeOrdersStatus(orders: Order[], givenStatus: String) {
             dbPromises.push(OrderModel.findOneAndUpdate(
                 { "id": ord.id },
                 { $set: {status: givenStatus} },
-                { new: true }
+                { returnDocument: 'after' }
             ))
         }
 
@@ -229,7 +229,7 @@ export async function freeTable(tableID: number) {
         const leftBooked = await BookedTablesModel.findOneAndUpdate(
             { name: 'indexes' },
             { $pull: {booked: tableID} },
-            { new: true }
+            { returnDocument: 'after' }
         );
 
         return leftBooked ? leftBooked.booked.length : null;
@@ -257,7 +257,7 @@ export async function updateAnalytics(order: Order, nrBookedTables: number, tota
             dbPromises.push(OrderItemAnalyticsModel.findOneAndUpdate(
                 { "item.itemID": currentItem.itemID, "item.categoryID": currentItem.categoryID },
                 { $inc: {quantity: qty}, $setOnInsert: {item: currentItem} },
-                { new: true, upsert: true }
+                { returnDocument: 'after', upsert: true }
             ));
         }
 
@@ -274,7 +274,7 @@ export async function updateAnalytics(order: Order, nrBookedTables: number, tota
                 $set: {occupationRate: occupationPercent},
                 $setOnInsert: {createdAt: todayStart}
             },
-            { new: true, upsert: true }
+            { returnDocument: 'after', upsert: true }
         );
     } catch (error) {
         console.error("Error in updating order items for analytics: ", error);
@@ -294,7 +294,7 @@ export async function updateOccupationRate(nrBookedTables: number, totalTables: 
         await AnalyticsModel.findOneAndUpdate(
             { createdAt: {$gte: todayStart} },
             { $set: {occupationRate: occupationPercent} },
-            { new: true, upsert: true }
+            { returnDocument: 'after', upsert: true }
         );
     } catch (error) {
         console.error("Error in updating the occupation rate: ", error);
@@ -312,7 +312,7 @@ export async function updateTips(tipAmount: number) {
         await AnalyticsModel.findOneAndUpdate(
             { createdAt: {$gte:  todayStart} },
             { $inc: {totalTips: tipAmount} },
-            { new: true, upsert: true }
+            { returnDocument: 'after', upsert: true }
         );
     } catch (error) {
         console.error("Error in updating the tips: ", error);
@@ -380,7 +380,7 @@ export async function addPendingPayment(body: any) {
         const paymentID = await CounterModel.findOneAndUpdate(
             { name: 'payments' },
             { $inc: {seq: 1} },
-            { new: true, upsert: true }
+            { returnDocument: 'after', upsert: true }
         )
 
         const tomorrowStart = getNextDayStart();
@@ -424,7 +424,7 @@ export async function completePayment(paymentID: number) {
         const currentPayment = await PaymentModel.findOneAndUpdate(
             { id: paymentID, createdAt: {$gte: todayStart} },
             { $set: {status: 'Completed'} },
-            { new: true }
+            { returnDocument: 'after' }
         )
 
         if (currentPayment) {
@@ -470,7 +470,7 @@ export async function updateUserLoginDate(email: string) {
         const result = await UserModel.findOneAndUpdate(
             { email: email },
             { $set: {lastLogin: new Date()} },
-            { new: true }
+            { returnDocument: 'after' }
         );
 
         if (result) {
