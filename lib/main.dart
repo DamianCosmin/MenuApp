@@ -79,7 +79,11 @@ class HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    context.read<TableProvider>().setTableID(16); // Added to skip QR reading
+
+    // Added to skip QR reading
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<TableProvider>().setTableID(16);
+    });
 
     mainOptionsAnimationController = AnimationController(
       vsync: this,

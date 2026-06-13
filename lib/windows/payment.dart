@@ -187,7 +187,7 @@ class PaymentPageState extends State<PaymentPage>
                     GridView.count(
                       crossAxisCount: 4,
                       physics: NeverScrollableScrollPhysics(),
-                      crossAxisSpacing: 16,
+                      crossAxisSpacing: 8,
                       mainAxisSpacing: 16,
                       childAspectRatio: 2.0,
                       padding: EdgeInsets.only(bottom: 16),
@@ -226,7 +226,7 @@ class PaymentPageState extends State<PaymentPage>
                           ),
                           child: Text(
                             tipsText[index],
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: 14),
                             textAlign: TextAlign.center,
                           ),
                         ),
